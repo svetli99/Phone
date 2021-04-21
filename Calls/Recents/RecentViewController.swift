@@ -8,7 +8,7 @@
 import UIKit
 
 class RecentViewController: UITableViewController {
-    var callStore = CallStore()
+    var callStore: CallStore!
     
     var segmentedControl = UISegmentedControl()
     
@@ -37,8 +37,8 @@ class RecentViewController: UITableViewController {
         super.viewDidLoad()
         
         tableView.rowHeight = 50
-        callStore.loadCalls()
-        
+        //callStore.loadCalls()
+        callStore = CallStore()
         let callTypes = [
             "All",
             "Missed"
@@ -51,7 +51,6 @@ class RecentViewController: UITableViewController {
         segmentedControl.translatesAutoresizingMaskIntoConstraints = false
         navigationItem.titleView = segmentedControl
         navigationController?.navigationBar.prefersLargeTitles = true
-        navigationController?.navigationBar.largeContentTitle = "Recentssss"
         navigationController?.navigationBar.backgroundColor = tableView.backgroundColor
         navigationController?.navigationBar.shadowImage = UIImage()
         navigationItem.leftBarButtonItem?.isEnabled = false
@@ -69,7 +68,7 @@ class RecentViewController: UITableViewController {
         cell.nameLabel.textColor = call.isMissed ? .red : .black
         cell.phoneTypeLabel.text = call.phoneType
         cell.dateLabel.text = dateFormatterName.string(from: call.date)
-        cell.icon.isHidden = !call.hasIcon
+        cell.icon.isHidden = !call.isOutcome
         
         return cell
     }
