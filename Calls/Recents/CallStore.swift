@@ -12,24 +12,27 @@ class Call: Codable {
     var phoneType: String
     var date: Date
     var isMissed: Bool
-    var hasIcon: Bool
-    var inSeriesCount = 1 {
+    var isOutcome: Bool
+    var inSeriesCount: Int  {
         didSet {
-            name += " (\(inSeriesCount))"
+            if inSeriesCount > 1 {
+                name += " (\(inSeriesCount))"
+            }
         }
     }
     
-    init(name: String, phoneType: String, date: Date, isMissed: Bool, hasIcon: Bool) {
+    init(name: String, phoneType: String, date: Date, isMissed: Bool, hasIcon: Bool, inSeriesCount: Int) {
         self.name = name
         self.phoneType = phoneType
         self.date = date
         self.isMissed = isMissed
-        self.hasIcon = hasIcon
+        self.isOutcome = hasIcon
+        self.inSeriesCount = inSeriesCount
     }
 }
 
 class CallStore {
-    var allCalls = [Call]() {
+    var allCalls: [Call] {
         didSet {
             missedCalls = allCalls.filter { $0.isMissed }
         }
@@ -44,12 +47,18 @@ class CallStore {
     }()
     
     init() {
-        let notificationCenter = NotificationCenter.default
-        notificationCenter.addObserver(self, selector: #selector(saveChanges), name: UIScene.didEnterBackgroundNotification, object: nil)
+        allCalls = [Call]()
+        do {
+            let jsonData = try Data(contentsOf: callArchiveURL)
+            allCalls = try JSONDecoder().decode([Call].self, from: jsonData)
+        } catch {
+            print("Error decoding allItems: \(error)")
+        }
+
     }
     
-    @discardableResult func createCall(name: String, phoneType: String, date: Date, isMissed: Bool, hasIcon: Bool) -> Call {
-        let newCall = Call(name: name, phoneType: phoneType, date: date, isMissed: isMissed, hasIcon: hasIcon)
+    @discardableResult func createCall(name: String, phoneType: String, date: Date, isMissed: Bool, hasIcon: Bool, inSeriesCount: Int) -> Call {
+        let newCall = Call(name: name, phoneType: phoneType, date: date, isMissed: isMissed, hasIcon: hasIcon, inSeriesCount: inSeriesCount)
         if let lastCall = allCalls.last, lastCall.name == newCall.name && lastCall.isMissed == newCall.isMissed{
             lastCall.inSeriesCount += 1
         } else{
@@ -74,7 +83,7 @@ class CallStore {
         var hasIcon = true
         
         for _ in 1...15 {
-           createCall(name: name, phoneType: phoneType, date: date, isMissed: isMissed, hasIcon: hasIcon)
+           createCall(name: name, phoneType: phoneType, date: date, isMissed: isMissed, hasIcon: hasIcon, inSeriesCount: 1)
             isMissed.toggle()
             hasIcon.toggle()
         }

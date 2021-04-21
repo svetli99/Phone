@@ -15,6 +15,7 @@
 		0E256F352629A9530045B39F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E256F332629A9530045B39F /* LaunchScreen.storyboard */; };
 		0E256F3E2629A9A60045B39F /* CallStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E256F3D2629A9A60045B39F /* CallStore.swift */; };
 		0E256F412629A9B30045B39F /* CallCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E256F402629A9B30045B39F /* CallCell.swift */; };
+		0E275A8126304142008A9149 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 0E275A8026304142008A9149 /* .gitignore */; };
 		0E37EDF22629CDD70099F19B /* OtherViewControllers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E37EDF12629CDD70099F19B /* OtherViewControllers.swift */; };
 		0E37EDFC262DC3C30099F19B /* ContactStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E37EDF8262DC3C20099F19B /* ContactStore.swift */; };
 		0E37EDFD262DC3C30099F19B /* ContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E37EDF9262DC3C20099F19B /* ContactViewController.swift */; };
@@ -33,6 +34,7 @@
 		0E256F362629A9530045B39F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0E256F3D2629A9A60045B39F /* CallStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallStore.swift; sourceTree = "<group>"; };
 		0E256F402629A9B30045B39F /* CallCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallCell.swift; sourceTree = "<group>"; };
+		0E275A8026304142008A9149 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		0E37EDF12629CDD70099F19B /* OtherViewControllers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherViewControllers.swift; sourceTree = "<group>"; };
 		0E37EDF8262DC3C20099F19B /* ContactStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContactStore.swift; path = "../../../../Test14(09.04.2021)/Contacts/Contacts/ContactStore.swift"; sourceTree = "<group>"; };
 		0E37EDF9262DC3C20099F19B /* ContactViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContactViewController.swift; path = "../../../../Test14(09.04.2021)/Contacts/Contacts/ContactViewController.swift"; sourceTree = "<group>"; };
@@ -54,6 +56,7 @@
 		0E256F1C2629A9500045B39F = {
 			isa = PBXGroup;
 			children = (
+				0E275A8026304142008A9149 /* .gitignore */,
 				0E256F272629A9500045B39F /* Calls */,
 				0E256F262629A9500045B39F /* Products */,
 			);
@@ -161,6 +164,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0E275A8126304142008A9149 /* .gitignore in Resources */,
 				0E256F352629A9530045B39F /* LaunchScreen.storyboard in Resources */,
 				0E256F322629A9530045B39F /* Assets.xcassets in Resources */,
 				0E256F302629A9500045B39F /* Main.storyboard in Resources */,
