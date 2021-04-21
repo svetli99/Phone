@@ -7,15 +7,29 @@
 
 import UIKit
 
-class ViewController: UITableViewController {
+class RecentViewController: UITableViewController {
     var callStore = CallStore()
     
     var segmentedControl = UISegmentedControl()
     
-    let dateFormatter: DateFormatter = {
+    let dateFormatterName: DateFormatter = {
         let formatter = DateFormatter()
-        formatter.locale = Locale.current
-        formatter.dateStyle = .short
+        formatter.locale = Locale(identifier: "en")
+        formatter.dateFormat = "EEEE"
+        return formatter
+    }()
+    
+    let dateFormatterHours: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US")
+        formatter.dateFormat = "HH:mm"
+        return formatter
+    }()
+    
+    let dateFormatterDate: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en")
+        formatter.dateFormat = "EEEE"
         return formatter
     }()
     
@@ -36,11 +50,12 @@ class ViewController: UITableViewController {
         segmentedControl.addTarget(self, action: #selector(callTypeChanged), for: .valueChanged)
         segmentedControl.translatesAutoresizingMaskIntoConstraints = false
         navigationItem.titleView = segmentedControl
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-        //self.navigationController?.navigationBar.backgroundColor = .white
-        self.navigationItem.leftBarButtonItem?.isEnabled = false
-        self.navigationItem.leftBarButtonItem?.title = ""
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.navigationBar.largeContentTitle = "Recentssss"
+        navigationController?.navigationBar.backgroundColor = tableView.backgroundColor
+        navigationController?.navigationBar.shadowImage = UIImage()
+        navigationItem.leftBarButtonItem?.isEnabled = false
+        navigationItem.leftBarButtonItem?.title = ""
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -50,21 +65,16 @@ class ViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) ->         UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CallCell", for: indexPath) as! CallCell
         let call = callStore.getCall(segmentedIndex: segmentedControl.selectedSegmentIndex, row: indexPath.row)
-        print("segmentedIndex:", segmentedControl.selectedSegmentIndex, "row:", indexPath.row)
         cell.nameLabel.text = call.name
-        if call.isMissed {
-            cell.nameLabel.textColor = .red
-        }
+        cell.nameLabel.textColor = call.isMissed ? .red : .black
         cell.phoneTypeLabel.text = call.phoneType
-        cell.dateLabel.text = dateFormatter.string(from: call.date)
-        if !call.hasIcon {
-            cell.icon.isHidden = true
-        }
+        cell.dateLabel.text = dateFormatterName.string(from: call.date)
+        cell.icon.isHidden = !call.hasIcon
+        
         return cell
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        print(indexPath)
         if editingStyle == .delete {
             callStore.deleteCall(segmentedIndex: segmentedControl.selectedSegmentIndex, row: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .automatic)
@@ -73,8 +83,6 @@ class ViewController: UITableViewController {
     
     @objc func callTypeChanged() {
         tableView.reloadData()
-        print(callStore.allCalls.count)
-        callStore.allCalls.forEach { print($0.isMissed) }
     }
     
     @IBAction func edit() {
@@ -93,6 +101,11 @@ class ViewController: UITableViewController {
     @IBAction func clear() {
         callStore.allCalls.removeAll()
         tableView.reloadData()
+    }
+    
+    func pickDateFormatter() {
+        let date = Date()
+        
     }
 }
 

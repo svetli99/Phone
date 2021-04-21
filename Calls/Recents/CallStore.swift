@@ -7,7 +7,7 @@
 
 import UIKit
 
-class Call {
+class Call: Codable {
     var name: String
     var phoneType: String
     var date: Date
@@ -35,6 +35,18 @@ class CallStore {
         }
     }
     var missedCalls = [Call]()
+    
+    let callArchiveURL: URL = {
+        let documentsDirectories = FileManager.default.urls(for: .documentDirectory,
+                                                            in: .userDomainMask)
+        let documentDirectory = documentsDirectories.first!
+        return documentDirectory.appendingPathComponent("calls.json")
+    }()
+    
+    init() {
+        let notificationCenter = NotificationCenter.default
+        notificationCenter.addObserver(self, selector: #selector(saveChanges), name: UIScene.didEnterBackgroundNotification, object: nil)
+    }
     
     @discardableResult func createCall(name: String, phoneType: String, date: Date, isMissed: Bool, hasIcon: Bool) -> Call {
         let newCall = Call(name: name, phoneType: phoneType, date: date, isMissed: isMissed, hasIcon: hasIcon)
@@ -82,5 +94,17 @@ class CallStore {
             }
         }
         allCalls.remove(at: row)
+    }
+    
+    @objc func saveChanges() throws {
+        print("Saving items to: \(callArchiveURL)")
+        
+        do {
+            let encoder = JSONEncoder()
+            let data = try encoder.encode(allCalls)
+            try data.write(to: callArchiveURL, options: [.atomic])
+        } catch let encodingError {
+            throw encodingError
+        }
     }
 }
