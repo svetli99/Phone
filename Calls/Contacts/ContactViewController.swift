@@ -8,16 +8,17 @@
 import UIKit
 
 class ContactViewController: UITableViewController {
-    var contactStore = ContactStore()
+    var contactStore: ContactStore!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        contactStore = ContactStore()
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 65
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.searchController = UISearchController()
-        navigationController?.navigationItem.hidesSearchBarWhenScrolling = false
+        navigationItem.hidesSearchBarWhenScrolling = false
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {

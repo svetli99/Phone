@@ -7,7 +7,7 @@
 
 import UIKit
 
-class Contact: Comparable {
+class Contact: Comparable, Codable {
     var name: String
     
     init(_ name: String) {

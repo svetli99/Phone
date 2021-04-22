@@ -80,11 +80,7 @@
                                 <action selector="clear" destination="G3F-zU-2Mr" id="5Oo-Dx-ab0"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="Edit" id="JKE-vg-K3Q">
-                            <connections>
-                                <action selector="edit" destination="G3F-zU-2Mr" id="0fE-V4-Lvu"/>
-                            </connections>
-                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" systemItem="edit" id="JKE-vg-K3Q"/>
                     </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hAA-7Q-g4M" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

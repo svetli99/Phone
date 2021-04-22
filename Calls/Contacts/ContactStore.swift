@@ -9,11 +9,34 @@ import UIKit
 
 class ContactStore {
     var allContacts = [(Character, [Contact])]()
+    let contactsArchiveURL: URL = {
+        let documentsDirectories = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        let documentDirectory = documentsDirectories.first!
+        
+        return documentDirectory.appendingPathComponent("contacts.json")
+    }()
     
     init() {
-        for _ in 1...20 {
-            createContact()
+        let notificationCenter = NotificationCenter.default
+            notificationCenter.addObserver(self, selector: #selector(saveChanges), name: UIScene.didEnterBackgroundNotification, object: nil)
+        do {
+            let jsonData = try Data(contentsOf: contactsArchiveURL)
+            let names = try JSONDecoder().decode([String].self, from: jsonData)
+            let contacts = names.map { Contact($0) }
+            for contact in contacts {
+                let first = contact.name.first!
+                if let index = allContacts.firstIndex { $0.0 == first } {
+                    allContacts[index].1.append(contact)
+                    allContacts[index].1.sort()
+                } else {
+                    allContacts.append((first,[contact]))
+                    allContacts.sort { $0.0 < $1.0 }
+                }
+            }
+        } catch {
+            print("Error decoding allContacts: \(error)")
         }
+
     }
     
     @discardableResult func createContact() -> Contact? {
@@ -42,5 +65,17 @@ class ContactStore {
     
     func getSectoinTittle(section: Int) -> String {
         String(allContacts[section].0)
+    }
+    
+    @objc func saveChanges() throws {
+        print("Saving items to: \(contactsArchiveURL)")
+        
+        do {
+            let encoder = JSONEncoder()
+            let data = try encoder.encode(allContacts.map {$1})
+            try data.write(to: contactsArchiveURL, options: [.atomic])
+        } catch let encodingError {
+            throw encodingError
+        }
     }
 }
