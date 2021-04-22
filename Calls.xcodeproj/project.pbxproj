@@ -36,10 +36,10 @@
 		0E256F402629A9B30045B39F /* CallCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallCell.swift; sourceTree = "<group>"; };
 		0E275A8026304142008A9149 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		0E37EDF12629CDD70099F19B /* OtherViewControllers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherViewControllers.swift; sourceTree = "<group>"; };
-		0E37EDF8262DC3C20099F19B /* ContactStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContactStore.swift; path = "../../../../Test14(09.04.2021)/Contacts/Contacts/ContactStore.swift"; sourceTree = "<group>"; };
-		0E37EDF9262DC3C20099F19B /* ContactViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContactViewController.swift; path = "../../../../Test14(09.04.2021)/Contacts/Contacts/ContactViewController.swift"; sourceTree = "<group>"; };
-		0E37EDFA262DC3C30099F19B /* ContactCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContactCell.swift; path = "../../../../Test14(09.04.2021)/Contacts/Contacts/ContactCell.swift"; sourceTree = "<group>"; };
-		0E37EDFB262DC3C30099F19B /* Contact.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Contact.swift; path = "../../../../Test14(09.04.2021)/Contacts/Contacts/Contact.swift"; sourceTree = "<group>"; };
+		0E37EDF8262DC3C20099F19B /* ContactStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactStore.swift; sourceTree = "<group>"; };
+		0E37EDF9262DC3C20099F19B /* ContactViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactViewController.swift; sourceTree = "<group>"; };
+		0E37EDFA262DC3C30099F19B /* ContactCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactCell.swift; sourceTree = "<group>"; };
+		0E37EDFB262DC3C30099F19B /* Contact.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Contact.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */

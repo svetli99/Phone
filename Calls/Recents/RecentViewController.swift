@@ -29,7 +29,7 @@ class RecentViewController: UITableViewController {
     let dateFormatterDate: DateFormatter = {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en")
-        formatter.dateFormat = "EEEE"
+        formatter.dateFormat = "dd.MM.yy"
         return formatter
     }()
     
@@ -37,7 +37,6 @@ class RecentViewController: UITableViewController {
         super.viewDidLoad()
         
         tableView.rowHeight = 50
-        //callStore.loadCalls()
         callStore = CallStore()
         let callTypes = [
             "All",
@@ -55,6 +54,7 @@ class RecentViewController: UITableViewController {
         navigationController?.navigationBar.shadowImage = UIImage()
         navigationItem.leftBarButtonItem?.isEnabled = false
         navigationItem.leftBarButtonItem?.title = ""
+        navigationItem.rightBarButtonItem = editButtonItem
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -67,7 +67,7 @@ class RecentViewController: UITableViewController {
         cell.nameLabel.text = call.name
         cell.nameLabel.textColor = call.isMissed ? .red : .black
         cell.phoneTypeLabel.text = call.phoneType
-        cell.dateLabel.text = dateFormatterName.string(from: call.date)
+        cell.dateLabel.text = dateFormatting(call.date)
         cell.icon.isHidden = !call.isOutcome
         
         return cell
@@ -80,21 +80,14 @@ class RecentViewController: UITableViewController {
         }
     }
     
-    @objc func callTypeChanged() {
-        tableView.reloadData()
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        self.navigationItem.leftBarButtonItem?.isEnabled = isEditing
+        self.navigationItem.leftBarButtonItem?.title = isEditing ? "Clear" : ""
     }
     
-    @IBAction func edit() {
-        isEditing.toggle()
-        if isEditing {
-            navigationItem.rightBarButtonItem?.title = "Done"
-            self.navigationItem.leftBarButtonItem?.isEnabled = true
-            self.navigationItem.leftBarButtonItem?.title = "Clear"
-        } else {
-            navigationItem.rightBarButtonItem?.title = "Edit"
-            navigationItem.leftBarButtonItem?.isEnabled = false
-            navigationItem.leftBarButtonItem?.title = ""
-        }
+    @objc func callTypeChanged() {
+        tableView.reloadData()
     }
     
     @IBAction func clear() {
@@ -102,8 +95,36 @@ class RecentViewController: UITableViewController {
         tableView.reloadData()
     }
     
-    func pickDateFormatter() {
-        let date = Date()
+    func setEptyPage() {
+        let emptyLabel = UILabel()
+        emptyLabel.text = "No Recents"
+        
+        tableView.separatorStyle = .none
+        tableView.addSubview(emptyLabel)
+        emptyLabel.centerYAnchor.constraint(equalTo: tableView.centerYAnchor).isActive = true
+        emptyLabel.centerXAnchor.constraint(equalTo: tableView.centerXAnchor).isActive = true
+    }
+    
+    func restore() {
+        
+    }
+    
+    func dateFormatting(_ date: Date) -> String {
+        let now = Date()
+        let formattedNow = dateFormatterDate.string(from: now)
+        let formattedDate = dateFormatterDate.string(from: date)
+        let daysNow = Int(formattedNow.prefix(2))!
+        let daysDate = Int(formattedDate.prefix(2))!
+        switch daysNow {
+        case daysDate:
+            return dateFormatterHours.string(from: date)
+        case daysDate + 1:
+            return "Yesterday"
+        case (daysDate + 2) ... (daysDate + 7):
+            return dateFormatterName.string(from: date)
+        default:
+            return formattedDate
+        }
         
     }
 }

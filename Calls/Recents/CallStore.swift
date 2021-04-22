@@ -32,7 +32,7 @@ class Call: Codable {
 }
 
 class CallStore {
-    var allCalls: [Call] {
+    var allCalls = [Call]() {
         didSet {
             missedCalls = allCalls.filter { $0.isMissed }
         }
@@ -40,19 +40,29 @@ class CallStore {
     var missedCalls = [Call]()
     
     let callArchiveURL: URL = {
-        let documentsDirectories = FileManager.default.urls(for: .documentDirectory,
-                                                            in: .userDomainMask)
+        let documentsDirectories = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         let documentDirectory = documentsDirectories.first!
+        
         return documentDirectory.appendingPathComponent("calls.json")
     }()
     
+    let dateFormatterHours: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US")
+        formatter.dateFormat = "dd.MM.yyyy HH:mm"
+        return formatter
+    }()
+    
     init() {
-        allCalls = [Call]()
+        let notificationCenter = NotificationCenter.default
+            notificationCenter.addObserver(self, selector: #selector(saveChanges), name: UIScene.didEnterBackgroundNotification, object: nil)
         do {
             let jsonData = try Data(contentsOf: callArchiveURL)
-            allCalls = try JSONDecoder().decode([Call].self, from: jsonData)
+            let jsonDecoder = JSONDecoder()
+            jsonDecoder.dateDecodingStrategy = .formatted(dateFormatterHours)
+            allCalls = try jsonDecoder.decode([Call].self, from: jsonData)
         } catch {
-            print("Error decoding allItems: \(error)")
+            print("Error decoding allCalls: \(error)")
         }
 
     }
