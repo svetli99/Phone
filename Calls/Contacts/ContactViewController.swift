@@ -7,8 +7,9 @@
 
 import UIKit
 
-class ContactViewController: UITableViewController {
+class ContactViewController: UITableViewController, UISearchResultsUpdating {
     var contactStore: ContactStore!
+    var searchController: UISearchController!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -17,7 +18,9 @@ class ContactViewController: UITableViewController {
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 65
         navigationController?.navigationBar.prefersLargeTitles = true
-        navigationItem.searchController = UISearchController()
+        searchController = UISearchController()
+        navigationItem.searchController = searchController
+        searchController.searchResultsUpdater = self
         navigationItem.hidesSearchBarWhenScrolling = false
     }
     
@@ -38,6 +41,10 @@ class ContactViewController: UITableViewController {
         let contact = contactStore.getContact(section: indexPath.section, row: indexPath.row)
         cell.name.text = contact.name
         return cell
+    }
+    
+    func updateSearchResults(for searchController: UISearchController) {
+        searchController.textInputContextIdentifier
     }
 
 }

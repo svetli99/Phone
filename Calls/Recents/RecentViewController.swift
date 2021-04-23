@@ -86,6 +86,8 @@ class RecentViewController: UITableViewController {
         self.navigationItem.leftBarButtonItem?.title = isEditing ? "Clear" : ""
     }
     
+    
+    
     @objc func callTypeChanged() {
         tableView.reloadData()
     }
