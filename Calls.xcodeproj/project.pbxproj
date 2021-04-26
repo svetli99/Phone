@@ -22,6 +22,7 @@
 		0E37EDFE262DC3C30099F19B /* ContactCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E37EDFA262DC3C30099F19B /* ContactCell.swift */; };
 		0E37EDFF262DC3C30099F19B /* Contact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E37EDFB262DC3C30099F19B /* Contact.swift */; };
 		7A89DD2A2632EFCF00D23AEE /* KeypadViewContrloller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A89DD292632EFCF00D23AEE /* KeypadViewContrloller.swift */; };
+		7A8EA7BD2636B5E700721182 /* CallViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8EA7BC2636B5E700721182 /* CallViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +43,7 @@
 		0E37EDFA262DC3C30099F19B /* ContactCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactCell.swift; sourceTree = "<group>"; };
 		0E37EDFB262DC3C30099F19B /* Contact.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Contact.swift; sourceTree = "<group>"; };
 		7A89DD292632EFCF00D23AEE /* KeypadViewContrloller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeypadViewContrloller.swift; sourceTree = "<group>"; };
+		7A8EA7BC2636B5E700721182 /* CallViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,6 +82,7 @@
 				0E37EDF5262DC3600099F19B /* Recents */,
 				0E37EDF7262DC3810099F19B /* Contacts */,
 				7A89DD282632EF9900D23AEE /* Keypad */,
+				7A8EA7BC2636B5E700721182 /* CallViewController.swift */,
 				0E256F2E2629A9500045B39F /* Main.storyboard */,
 				0E256F312629A9530045B39F /* Assets.xcassets */,
 				0E256F332629A9530045B39F /* LaunchScreen.storyboard */,
@@ -195,6 +198,7 @@
 				0E37EDFD262DC3C30099F19B /* ContactViewController.swift in Sources */,
 				0E256F292629A9500045B39F /* AppDelegate.swift in Sources */,
 				0E256F2B2629A9500045B39F /* SceneDelegate.swift in Sources */,
+				7A8EA7BD2636B5E700721182 /* CallViewController.swift in Sources */,
 				0E37EDF22629CDD70099F19B /* OtherViewControllers.swift in Sources */,
 				0E256F3E2629A9A60045B39F /* CallStore.swift in Sources */,
 				7A89DD2A2632EFCF00D23AEE /* KeypadViewContrloller.swift in Sources */,
