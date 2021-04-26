@@ -127,7 +127,19 @@ class RecentViewController: UITableViewController {
         default:
             return formattedDate
         }
-        
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "CallViewController" {
+            if let row = tableView.indexPathForSelectedRow?.row {
+                let callViewController = segue.destination as! CallViewController
+                let call = callStore.getCall(segmentedIndex: segmentedControl.selectedSegmentIndex, row: row)
+                callViewController.name = call.name
+            }
+            
+        } else {
+            preconditionFailure("Unexpected segue identifier.")
+        }
     }
 }
 

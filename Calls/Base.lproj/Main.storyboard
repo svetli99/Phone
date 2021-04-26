@@ -66,6 +66,7 @@
                                     <outlet property="icon" destination="nVg-37-ezh" id="cQb-pW-z0z"/>
                                     <outlet property="nameLabel" destination="aIa-Xf-cn8" id="mBG-de-uv3"/>
                                     <outlet property="phoneTypeLabel" destination="wcc-5a-7hD" id="frM-CL-5S4"/>
+                                    <segue destination="56s-Pk-NpS" kind="presentation" identifier="CallViewController" modalPresentationStyle="fullScreen" id="UEn-sV-ujG"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -183,6 +184,7 @@
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="name" destination="l8s-ck-NbI" id="ymm-ef-Tbw"/>
+                                    <segue destination="56s-Pk-NpS" kind="presentation" identifier="CallViewController" modalPresentationStyle="fullScreen" id="McA-Tx-R25"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -420,7 +422,7 @@
                                                     </preferredSymbolConfiguration>
                                                 </state>
                                                 <connections>
-                                                    <segue destination="56s-Pk-NpS" kind="presentation" modalPresentationStyle="fullScreen" id="i9O-Ly-jsS"/>
+                                                    <segue destination="56s-Pk-NpS" kind="presentation" identifier="CallViewController" modalPresentationStyle="fullScreen" id="i9O-Ly-jsS"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EBT-Cs-S6N">
@@ -659,6 +661,9 @@
                                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                             </preferredSymbolConfiguration>
                                         </state>
+                                        <connections>
+                                            <action selector="endCall:" destination="56s-Pk-NpS" eventType="touchUpInside" id="7wF-Yr-hPU"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <constraints>
@@ -746,6 +751,9 @@
             <point key="canvasLocation" x="3551" y="53"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="McA-Tx-R25"/>
+    </inferredMetricsTieBreakers>
     <resources>
         <image name="circle.grid.3x3.fill" catalog="system" width="128" height="112"/>
         <image name="clock.fill" catalog="system" width="128" height="121"/>

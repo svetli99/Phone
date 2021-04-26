@@ -46,6 +46,19 @@ class ContactViewController: UITableViewController, UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         searchController.textInputContextIdentifier
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "CallViewController" {
+            if let indexPath = tableView.indexPathForSelectedRow {
+                let callViewController = segue.destination as! CallViewController
+                let conatct = contactStore.getContact(section: indexPath.section, row: indexPath.row)
+                callViewController.name = conatct.name
+            }
+            
+        } else {
+            preconditionFailure("Unexpected segue identifier.")
+        }
+    }
 
 }
 

@@ -69,6 +69,14 @@ class KeypadViewController: UIViewController {
                 addNumberButton.isEnabled = false
             }
         }
-        
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "CallViewController" {
+            let callViewController = segue.destination as! CallViewController
+            callViewController.name = numberLabel.text
+        } else {
+            preconditionFailure("Unexpected segue identifier.")
+        }
     }
 }
