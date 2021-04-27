@@ -21,8 +21,7 @@ class ContactStore {
             notificationCenter.addObserver(self, selector: #selector(saveChanges), name: UIScene.didEnterBackgroundNotification, object: nil)
         do {
             let jsonData = try Data(contentsOf: contactsArchiveURL)
-            let names = try JSONDecoder().decode([String].self, from: jsonData)
-            let contacts = names.map { Contact($0) }
+            let contacts = try JSONDecoder().decode([Contact].self, from: jsonData)
             for contact in contacts {
                 let first = contact.name.first!
                 if let index = allContacts.firstIndex { $0.0 == first } {
@@ -39,8 +38,8 @@ class ContactStore {
 
     }
     
-    @discardableResult func createContact() -> Contact? {
-        let newContact = Contact(random: true)
+    @discardableResult func createContact(name: String, number: String) -> Contact? {
+        let newContact = Contact(name,number)
         guard let first = newContact.name.first else {
             return nil
         }
@@ -65,6 +64,17 @@ class ContactStore {
     
     func getSectoinTittle(section: Int) -> String {
         String(allContacts[section].0)
+    }
+    
+    func contactForNumber(number: String) -> String? {
+        for section in allContacts {
+            for contact in section.1 {
+                if contact.number == number {
+                    return contact.name
+                }
+            }
+        }
+        return nil
     }
     
     @objc func saveChanges() throws {

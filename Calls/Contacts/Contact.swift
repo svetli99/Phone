@@ -9,9 +9,11 @@ import UIKit
 
 class Contact: Comparable, Codable {
     var name: String
+    var number: String
     
-    init(_ name: String) {
+    init(_ name: String,_ number: String) {
         self.name = name
+        self.number = number
     }
     
     convenience init(random: Bool = false) {
@@ -23,10 +25,10 @@ class Contact: Comparable, Codable {
             let randomLastName = lastName.randomElement()!
 
             let randomName = "\(randomFirstName) \(randomLastName)"
-            
-            self.init(randomName)
+            let number = "0899001122"
+            self.init(randomName,number)
         } else {
-            self.init("")
+            self.init("","0")
         }
     }
     

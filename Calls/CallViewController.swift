@@ -27,6 +27,16 @@ class CallViewController: UIViewController {
     }
     
     @IBAction func endCall(_ sender: UIButton) {
+        let recentViewController = RecentViewController()
+        recentViewController.initt()
+        let callStore = recentViewController.callStore
+        
+        let contactViewController = ContactViewController()
+        contactViewController.initt()
+        let contactStore = contactViewController.contactStore
+        let name = contactStore!.contactForNumber(number: nameLabel.text!) ?? nameLabel
+            .text!
+        callStore!.createCall(name: name, phoneType: "mobile", date: Date(), isMissed: false, hasIcon: true)
         self.dismiss(animated: false, completion: nil)
     }
 }

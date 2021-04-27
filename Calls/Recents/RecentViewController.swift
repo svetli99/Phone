@@ -33,18 +33,20 @@ class RecentViewController: UITableViewController {
         return formatter
     }()
     
+    func initt() {
+        callStore = CallStore()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tableView.rowHeight = 50
-        callStore = CallStore()
+        initt()
         let callTypes = [
             "All",
             "Missed"
         ]
-        
         segmentedControl = UISegmentedControl(items: callTypes)
-        segmentedControl.backgroundColor = .systemBackground
         segmentedControl.selectedSegmentIndex = 0
         segmentedControl.addTarget(self, action: #selector(callTypeChanged), for: .valueChanged)
         segmentedControl.translatesAutoresizingMaskIntoConstraints = false
@@ -55,6 +57,11 @@ class RecentViewController: UITableViewController {
         navigationItem.leftBarButtonItem?.isEnabled = false
         navigationItem.leftBarButtonItem?.title = ""
         navigationItem.rightBarButtonItem = editButtonItem
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tableView.reloadData()
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -86,10 +93,9 @@ class RecentViewController: UITableViewController {
         self.navigationItem.leftBarButtonItem?.title = isEditing ? "Clear" : ""
     }
     
-    
-    
     @objc func callTypeChanged() {
         tableView.reloadData()
+        
     }
     
     @IBAction func clear() {
@@ -112,21 +118,17 @@ class RecentViewController: UITableViewController {
     }
     
     func dateFormatting(_ date: Date) -> String {
-        let now = Date()
-        let formattedNow = dateFormatterDate.string(from: now)
-        let formattedDate = dateFormatterDate.string(from: date)
-        let daysNow = Int(formattedNow.prefix(2))!
-        let daysDate = Int(formattedDate.prefix(2))!
-        switch daysNow {
-        case daysDate:
+        let startOfToday = Calendar.current.date(bySettingHour: 0, minute: 0, second: 0, of: Date())!
+        if startOfToday < date {
             return dateFormatterHours.string(from: date)
-        case daysDate + 1:
-            return "Yesterday"
-        case (daysDate + 2) ... (daysDate + 7):
-            return dateFormatterName.string(from: date)
-        default:
-            return formattedDate
         }
+        if startOfToday.advanced(by: -60 * 60 * 24) < date {
+            return "Yesterday"
+        }
+        if startOfToday.advanced(by: -60 * 60 * 24 * 6) < date {
+            return dateFormatterName.string(from: date)
+        }
+        return dateFormatterDate.string(from: date)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

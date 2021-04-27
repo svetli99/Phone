@@ -13,7 +13,7 @@ class Call: Codable {
     var date: Date
     var isMissed: Bool
     var isOutcome: Bool
-    var inSeriesCount: Int  {
+    var inSeriesCount: Int = 1 {
         didSet {
             if inSeriesCount > 1 {
                 name += " (\(inSeriesCount))"
@@ -21,13 +21,12 @@ class Call: Codable {
         }
     }
     
-    init(name: String, phoneType: String, date: Date, isMissed: Bool, hasIcon: Bool, inSeriesCount: Int) {
+    init(name: String, phoneType: String, date: Date, isMissed: Bool, hasIcon: Bool) {
         self.name = name
         self.phoneType = phoneType
         self.date = date
         self.isMissed = isMissed
         self.isOutcome = hasIcon
-        self.inSeriesCount = inSeriesCount
     }
 }
 
@@ -46,7 +45,7 @@ class CallStore {
         return documentDirectory.appendingPathComponent("calls.json")
     }()
     
-    let dateFormatterHours: DateFormatter = {
+    let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US")
         formatter.dateFormat = "dd.MM.yyyy HH:mm"
@@ -59,20 +58,21 @@ class CallStore {
         do {
             let jsonData = try Data(contentsOf: callArchiveURL)
             let jsonDecoder = JSONDecoder()
-            jsonDecoder.dateDecodingStrategy = .formatted(dateFormatterHours)
+            jsonDecoder.dateDecodingStrategy = .formatted(dateFormatter)
             allCalls = try jsonDecoder.decode([Call].self, from: jsonData)
+            missedCalls = allCalls.filter { $0.isMissed }
         } catch {
             print("Error decoding allCalls: \(error)")
         }
 
     }
     
-    @discardableResult func createCall(name: String, phoneType: String, date: Date, isMissed: Bool, hasIcon: Bool, inSeriesCount: Int) -> Call {
-        let newCall = Call(name: name, phoneType: phoneType, date: date, isMissed: isMissed, hasIcon: hasIcon, inSeriesCount: inSeriesCount)
+    @discardableResult func createCall(name: String, phoneType: String, date: Date, isMissed: Bool, hasIcon: Bool) -> Call {
+        let newCall = Call(name: name, phoneType: phoneType, date: date, isMissed: isMissed, hasIcon: hasIcon)
         if let lastCall = allCalls.last, lastCall.name == newCall.name && lastCall.isMissed == newCall.isMissed{
             lastCall.inSeriesCount += 1
         } else{
-            allCalls.append(newCall)
+            allCalls.insert(newCall, at: 0)
         }
         return newCall
     }
@@ -93,7 +93,7 @@ class CallStore {
         var hasIcon = true
         
         for _ in 1...15 {
-           createCall(name: name, phoneType: phoneType, date: date, isMissed: isMissed, hasIcon: hasIcon, inSeriesCount: 1)
+           createCall(name: name, phoneType: phoneType, date: date, isMissed: isMissed, hasIcon: hasIcon)
             isMissed.toggle()
             hasIcon.toggle()
         }

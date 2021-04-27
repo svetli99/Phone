@@ -11,12 +11,17 @@ class ContactViewController: UITableViewController, UISearchResultsUpdating {
     var contactStore: ContactStore!
     var searchController: UISearchController!
     
+    func initt() {
+        contactStore = ContactStore()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        contactStore = ContactStore()
-        tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = 65
+        initt()
+//        tableView.rowHeight = UITableView.automaticDimension
+//        tableView.estimatedRowHeight = 65
+        tableView.rowHeight = 40
         navigationController?.navigationBar.prefersLargeTitles = true
         searchController = UISearchController()
         navigationItem.searchController = searchController
