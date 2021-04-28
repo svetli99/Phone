@@ -8,7 +8,7 @@
 import UIKit
 
 class KeypadViewController: UIViewController {
-    @IBOutlet var keypadButtons: [UIButton]!
+    @IBOutlet var keypadButtonViews: [UIView]!
     @IBOutlet var numberLabel: UILabel!
     @IBOutlet var addNumberButton: UIButton!
    
@@ -16,7 +16,7 @@ class KeypadViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        keypadButtons.forEach {
+        keypadButtonViews.forEach {
             $0.layer.cornerRadius = $0.bounds.width * 0.5
             $0.clipsToBounds = true
         }
