@@ -24,8 +24,7 @@ class KeypadViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        addNumberButton.setTitle("", for: .normal)
-        addNumberButton.isEnabled = false
+        addNumberButton.isHidden = true
     }
     
     @IBAction func buttonPressed(_ sender: UIButton) {
@@ -51,23 +50,21 @@ class KeypadViewController: UIViewController {
                 }
             }
         }
+        
         numberLabel.text?.append(sender.currentTitle!)
-        if numberLabel.text!.count == 1{
-            addNumberButton.setTitle("Add Number", for: .normal)
-            addNumberButton.isEnabled = true
+        
+        if numberLabel.text!.count == 1 {
+            addNumberButton.isHidden = false
         }
     }
     
     @IBAction func deleteButton(_ sender: UIButton) {
-        if numberLabel.text! != "" {
+        if !numberLabel.text!.isEmpty {
             if numberLabel.text!.last == " " {
                 numberLabel.text!.removeLast()
             }
             numberLabel.text!.removeLast()
-            if numberLabel.text! == "" {
-                addNumberButton.setTitle("", for: .normal)
-                addNumberButton.isEnabled = false
-            }
+            addNumberButton.isHidden = numberLabel.text!.isEmpty
         }
     }
     
