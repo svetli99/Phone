@@ -33,15 +33,10 @@ class RecentViewController: UITableViewController {
         return formatter
     }()
     
-    func initt() {
-        callStore = CallStore()
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tableView.rowHeight = 50
-        initt()
         let callTypes = [
             "All",
             "Missed"

@@ -9,13 +9,18 @@ import UIKit
 
 class CallViewController: UIViewController {
     @IBOutlet var nameLabel: UILabel!
+    @IBOutlet var timeLabel: UILabel!
     @IBOutlet var buttons: [UIButton]!
     
     var name: String!
+    var timer = Timer()
+    var minutes = 0
+    var seconds = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
         nameLabel.text = name
+        runTimer()
     }
     
     override func viewDidLayoutSubviews() {
@@ -27,16 +32,29 @@ class CallViewController: UIViewController {
     }
     
     @IBAction func endCall(_ sender: UIButton) {
-        let recentViewController = RecentViewController()
-        recentViewController.initt()
-        let callStore = recentViewController.callStore
-        
-        let contactViewController = ContactViewController()
-        contactViewController.initt()
-        let contactStore = contactViewController.contactStore
-        let name = contactStore!.contactForNumber(number: nameLabel.text!) ?? nameLabel
+        let name = SceneDelegate.shared!.contactStore.contactForNumber(number: nameLabel.text!) ?? nameLabel
             .text!
-        callStore!.createCall(name: name, phoneType: "mobile", date: Date(), isMissed: false, hasIcon: true)
+        SceneDelegate.shared!.callStore.createCall(name: name, phoneType: "mobile", date: Date(), isMissed: false, hasIcon: true)
         self.dismiss(animated: false, completion: nil)
+    }
+    
+    func runTimer() {
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
+    }
+    
+    @objc func updateTimer() {
+        seconds += 1
+        if seconds == 60 {
+            seconds = 0
+            minutes += 1
+            if minutes == 60 {
+                minutes = 0
+            }
+        }
+        timeLabel.text = pad(minutes) + ":" + pad(seconds)
+    }
+    
+    func pad(_ num: Int) -> String {
+        return num > 9 ? "\(num)" : "0\(num)"
     }
 }

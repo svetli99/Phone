@@ -11,14 +11,9 @@ class ContactViewController: UITableViewController, UISearchResultsUpdating {
     var contactStore: ContactStore!
     var searchController: UISearchController!
     
-    func initt() {
-        contactStore = ContactStore()
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        initt()
 //        tableView.rowHeight = UITableView.automaticDimension
 //        tableView.estimatedRowHeight = 65
         tableView.rowHeight = 40
