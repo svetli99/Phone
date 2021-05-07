@@ -31,6 +31,8 @@ class Call: Codable {
 }
 
 class CallStore {
+    static var shared = CallStore()
+    
     var allCalls = [Call]() {
         didSet {
             missedCalls = allCalls.filter { $0.isMissed }
@@ -52,7 +54,7 @@ class CallStore {
         return formatter
     }()
     
-    init() {
+    private init() {
         let notificationCenter = NotificationCenter.default
             notificationCenter.addObserver(self, selector: #selector(saveChanges), name: UIScene.didEnterBackgroundNotification, object: nil)
         do {
@@ -120,6 +122,7 @@ class CallStore {
         
         do {
             let encoder = JSONEncoder()
+            encoder.dateEncodingStrategy = .formatted(dateFormatter)
             let data = try encoder.encode(allCalls)
             try data.write(to: callArchiveURL, options: [.atomic])
         } catch let encodingError {

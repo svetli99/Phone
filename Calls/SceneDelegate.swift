@@ -10,22 +10,9 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-    var callStore: CallStore!
-    var contactStore: ContactStore!
-    private(set) static var shared: SceneDelegate?
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let _ = (scene as? UIWindowScene) else { return }
-        callStore = CallStore()
-        contactStore = ContactStore()
-        let tabBarController = window!.rootViewController as! UITabBarController
-        let recentsNavigationController = tabBarController.viewControllers![1] as! UINavigationController
-        let recentsViewController = recentsNavigationController.topViewController as! RecentViewController
-        recentsViewController.callStore = callStore
-        let contactsNavigationController = tabBarController.viewControllers![2] as! UINavigationController
-        let contactsViewController = contactsNavigationController.topViewController as! ContactViewController
-        contactsViewController.contactStore = contactStore
-        SceneDelegate.shared = self
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

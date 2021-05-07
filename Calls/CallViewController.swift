@@ -11,6 +11,8 @@ class CallViewController: UIViewController {
     @IBOutlet var nameLabel: UILabel!
     @IBOutlet var timeLabel: UILabel!
     @IBOutlet var buttons: [UIButton]!
+    @IBOutlet var hideButton: UIButton!
+
     
     var name: String!
     var timer = Timer()
@@ -20,6 +22,7 @@ class CallViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         nameLabel.text = name
+        //keypadButton.addTarget(self, action: #selector(), for: .allEvents)
         runTimer()
     }
     
@@ -32,9 +35,10 @@ class CallViewController: UIViewController {
     }
     
     @IBAction func endCall(_ sender: UIButton) {
-        let name = SceneDelegate.shared!.contactStore.contactForNumber(number: nameLabel.text!) ?? nameLabel
-            .text!
-        SceneDelegate.shared!.callStore.createCall(name: name, phoneType: "mobile", date: Date(), isMissed: false, hasIcon: true)
+        let contactStore = ContactStore.shared
+        let name = contactStore.contactForNumber(number: nameLabel.text!) ?? nameLabel.text!
+        let callStore = CallStore.shared
+        callStore.createCall(name: name, phoneType: "mobile", date: Date(), isMissed: false, hasIcon: true)
         self.dismiss(animated: false, completion: nil)
     }
     

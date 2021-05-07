@@ -8,6 +8,8 @@
 import UIKit
 
 class ContactStore {
+    static var shared = ContactStore()
+    
     var allContacts = [(Character, [Contact])]()
     let contactsArchiveURL: URL = {
         let documentsDirectories = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
@@ -16,7 +18,7 @@ class ContactStore {
         return documentDirectory.appendingPathComponent("contacts.json")
     }()
     
-    init() {
+    private init() {
         let notificationCenter = NotificationCenter.default
             notificationCenter.addObserver(self, selector: #selector(saveChanges), name: UIScene.didEnterBackgroundNotification, object: nil)
         do {
@@ -82,7 +84,7 @@ class ContactStore {
         
         do {
             let encoder = JSONEncoder()
-            let data = try encoder.encode(allContacts.map {$1})
+            let data = try encoder.encode(allContacts.flatMap {$1})
             try data.write(to: contactsArchiveURL, options: [.atomic])
         } catch let encodingError {
             throw encodingError

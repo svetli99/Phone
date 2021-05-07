@@ -8,7 +8,7 @@
 import UIKit
 
 class ContactViewController: UITableViewController, UISearchResultsUpdating {
-    var contactStore: ContactStore!
+    var contactStore = ContactStore.shared
     var searchController: UISearchController!
     
     override func viewDidLoad() {
