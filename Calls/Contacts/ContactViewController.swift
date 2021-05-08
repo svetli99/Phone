@@ -44,7 +44,7 @@ class ContactViewController: UITableViewController, UISearchResultsUpdating {
     }
     
     func updateSearchResults(for searchController: UISearchController) {
-        searchController.textInputContextIdentifier
+        //searchController.textInputContextIdentifier
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

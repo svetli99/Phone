@@ -26,7 +26,7 @@ class ContactStore {
             let contacts = try JSONDecoder().decode([Contact].self, from: jsonData)
             for contact in contacts {
                 let first = contact.name.first!
-                if let index = allContacts.firstIndex { $0.0 == first } {
+                if let index = allContacts.firstIndex(where: { $0.0 == first }) {
                     allContacts[index].1.append(contact)
                     allContacts[index].1.sort()
                 } else {
@@ -45,7 +45,7 @@ class ContactStore {
         guard let first = newContact.name.first else {
             return nil
         }
-        if let index = allContacts.firstIndex { $0.0 == first } {
+        if let index = allContacts.firstIndex(where: { $0.0 == first }) {
             allContacts[index].1.append(newContact)
             allContacts[index].1.sort()
         } else {

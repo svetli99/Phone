@@ -12,17 +12,28 @@ class CallViewController: UIViewController {
     @IBOutlet var timeLabel: UILabel!
     @IBOutlet var buttons: [UIButton]!
     @IBOutlet var hideButton: UIButton!
-
+    @IBOutlet var endCallButton: UIButton!
+    @IBOutlet var customKeypad: CustomKeypad!
     
     var name: String!
     var timer = Timer()
     var minutes = 0
     var seconds = 0
+    var keypadInput = "" {
+        didSet {
+            nameLabel.text = keypadInput
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         nameLabel.text = name
-        //keypadButton.addTarget(self, action: #selector(), for: .allEvents)
+        customKeypad.isHidden = true
+        hideButton.setTitle("", for: .normal)
+        customKeypad.buttons.forEach {
+            $0.button.addTarget(self, action: #selector(buttonPressed), for: .touchDown)
+            $0.backgroundColor = $0.backgroundColor?.withAlphaComponent(0.1)
+        }
         runTimer()
     }
     
@@ -32,6 +43,9 @@ class CallViewController: UIViewController {
             $0.layer.cornerRadius = $0.bounds.width * 0.5
             $0.clipsToBounds = true
         }
+        endCallButton.layer.cornerRadius = endCallButton.bounds.width * 0.5
+        endCallButton.clipsToBounds = true
+        //customKeypad.configureViewHierarchy()
     }
     
     @IBAction func endCall(_ sender: UIButton) {
@@ -43,7 +57,8 @@ class CallViewController: UIViewController {
     }
     
     func runTimer() {
-        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self,
+                selector: #selector(updateTimer), userInfo: nil, repeats: true)
     }
     
     @objc func updateTimer() {
@@ -60,5 +75,44 @@ class CallViewController: UIViewController {
     
     func pad(_ num: Int) -> String {
         return num > 9 ? "\(num)" : "0\(num)"
+    }
+    
+    @objc func buttonPressed(_ sender: UIButton) {
+        keypadInput.append(sender.currentTitle!)
+        //changeNumberBackgroundColor(keypadButtons[sender.tag])
+    }
+    
+    func changeNumberBackgroundColor(_ sender: UIView) {
+        UIView.animate(withDuration: 1) {
+            sender.backgroundColor = .systemGray3
+            sender.backgroundColor = .systemGray5
+        }
+    }
+    
+    @IBAction func keypadButtonPressed(_ sender: UIButton) {
+        UIView.transition(with: customKeypad, duration: 0.4,
+                          options: .transitionCrossDissolve,
+                          animations: {
+                            self.customKeypad.isHidden = false
+                          })
+        hideButton.setTitle("Hide", for: .normal)
+        timeLabel.isHidden = true
+        buttons.forEach {
+            $0.isHidden = true
+        }
+    }
+    
+    @IBAction func hideButtonPressed(_ sender: UIButton) {
+        UIView.transition(with: customKeypad, duration: 0.4,
+                          options: .transitionCrossDissolve,
+                          animations: {
+                            self.customKeypad.isHidden = true
+                          })
+        hideButton.setTitle("", for: .normal)
+        nameLabel.text = name
+        timeLabel.isHidden = false
+        buttons.forEach {
+            $0.isHidden = false
+        }
     }
 }
