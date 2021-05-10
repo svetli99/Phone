@@ -21,14 +21,12 @@ class CustomKeypad: UIControl, UICollectionViewDataSource {
     var buttons: [CustomButton] = []
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        print(buttons.count, section)
-        return buttons.count
+        buttons.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MyCell", for: indexPath)
         cell.backgroundView = buttons[indexPath.row]
-        print(indexPath.row)
         return cell
     }
     
@@ -36,12 +34,8 @@ class CustomKeypad: UIControl, UICollectionViewDataSource {
         let keypadCollection: UICollectionView = {
             let layout = UICollectionViewFlowLayout()
             layout.itemSize = CGSize(width: frame.width / 3 - 30, height: frame.width / 3 - 30)
-//            layout.itemSize.width = 70
-//            layout.itemSize.height = 70
             layout.minimumInteritemSpacing = 12.5
             layout.minimumLineSpacing = 15
-            //layout.estimatedItemSize = .zero
-            print(frame)
             let collection = UICollectionView(frame: frame, collectionViewLayout: layout)
             collection.translatesAutoresizingMaskIntoConstraints = false
             collection.backgroundColor = .clear
@@ -74,9 +68,11 @@ class CustomKeypad: UIControl, UICollectionViewDataSource {
             ("#","")
         ]
         
+        var tag = 0
         buttons = viewLabels.map {
             let button = CustomButton()
-            button.setView($0)
+            button.setView($0,tag)
+            tag += 1
             return button
         }
     }
@@ -97,10 +93,12 @@ class CustomButton: UIView {
         clipsToBounds = true
     }
     
-    func setView(_ params: (title: String, subtitle: String)) {
+    func setView(_ params: (title: String, subtitle: String),_ tag: Int) {
         titleLabel.text = params.title
         subtitleLabel.text = params.subtitle
         button.setTitle(params.title, for: .normal)
+        button.setTitleColor(.clear, for: .normal)
+        button.tag = tag
         setConstraints()
     }
     
@@ -108,15 +106,12 @@ class CustomButton: UIView {
         addSubview(titleLabel)
         addSubview(subtitleLabel)
         addSubview(button)
-        bringSubviewToFront(button)
         backgroundColor = .systemGray5
         
         titleLabel.font = UIFont.systemFont(ofSize: 40)
-        titleLabel.textColor = .white
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         
         subtitleLabel.font = UIFont.systemFont(ofSize: 12)
-        subtitleLabel.textColor = .white
         subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
         
         button.translatesAutoresizingMaskIntoConstraints = false

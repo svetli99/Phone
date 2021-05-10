@@ -33,6 +33,8 @@ class CallViewController: UIViewController {
         customKeypad.buttons.forEach {
             $0.button.addTarget(self, action: #selector(buttonPressed), for: .touchDown)
             $0.backgroundColor = $0.backgroundColor?.withAlphaComponent(0.1)
+            $0.titleLabel.textColor = .white
+            $0.subtitleLabel.textColor = .white
         }
         runTimer()
     }
@@ -45,7 +47,6 @@ class CallViewController: UIViewController {
         }
         endCallButton.layer.cornerRadius = endCallButton.bounds.width * 0.5
         endCallButton.clipsToBounds = true
-        //customKeypad.configureViewHierarchy()
     }
     
     @IBAction func endCall(_ sender: UIButton) {
@@ -79,7 +80,7 @@ class CallViewController: UIViewController {
     
     @objc func buttonPressed(_ sender: UIButton) {
         keypadInput.append(sender.currentTitle!)
-        //changeNumberBackgroundColor(keypadButtons[sender.tag])
+        changeNumberBackgroundColor(customKeypad.buttons[sender.tag])
     }
     
     func changeNumberBackgroundColor(_ sender: UIView) {

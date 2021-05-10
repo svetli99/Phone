@@ -8,7 +8,6 @@
 import UIKit
 
 class KeypadViewController: UIViewController {
-    //@IBOutlet var keypadButtonViews: [UIView]!
     @IBOutlet var numberLabel: UILabel!
     @IBOutlet var addNumberButton: UIButton!
     @IBOutlet var deleteButton: UIButton!
@@ -22,13 +21,13 @@ class KeypadViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        //customKeypad.configureViewHierarchy()
         callButton.layer.cornerRadius = callButton.bounds.width * 0.5
         callButton.clipsToBounds = true
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         addNumberButton.isHidden = true
         customKeypad.buttons.forEach {
             $0.button.addTarget(self, action: #selector(buttonPressed), for: .touchDown)
@@ -65,7 +64,7 @@ class KeypadViewController: UIViewController {
             addNumberButton.isHidden = false
             deleteButton.isHidden = false
         }
-        //changeNumberBackgroundColor(buttons[sender.tag])
+        changeNumberBackgroundColor(customKeypad.buttons[sender.tag])
     }
     
     @IBAction func deleteButton(_ sender: UIButton) {
@@ -75,7 +74,8 @@ class KeypadViewController: UIViewController {
             }
             numberLabel.text!.removeLast()
             addNumberButton.isHidden = numberLabel.text!.isEmpty
-            deleteButton.isHidden = numberLabel.text!.isEmpty
+            deleteButton.imageView?.isHidden = numberLabel.text!.isEmpty
+            //deleteButton.isHidden = numberLabel.text!.isEmpty
         }
     }
     @IBAction func longPressZero(_ sender: UILongPressGestureRecognizer) {
