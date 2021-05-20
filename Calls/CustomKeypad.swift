@@ -7,18 +7,39 @@
 
 import UIKit
 
+enum KeypadStyles {
+    case dial, call, none
+}
+
 class CustomKeypad: UIControl, UICollectionViewDataSource {
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        configureViewHierarchy()
-    }
-    
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         configureViewHierarchy()
     }
     
+    var buttonBackgroundColor: UIColor = .systemGray5
+    var titleColor: UIColor = .black
+    var subtitleColor: UIColor = .black
+    
     var buttons: [CustomButton] = []
+    var style: KeypadStyles = .none {
+        didSet {
+            if style == .dial {
+                buttonBackgroundColor = .systemGray5
+                titleColor = .black
+                subtitleColor = .black
+                let zeroButtonIndex = buttons.firstIndex { $0.titleLabel.text == "0" }!
+                let zeroButton = buttons[zeroButtonIndex]
+                let gestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressZero))
+                zeroButton.button.addGestureRecognizer(gestureRecognizer)
+                
+            } else if style == .call {
+                buttonBackgroundColor = backgroundColor!
+                titleColor = .white
+                subtitleColor = .white
+            }
+        }
+    }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         buttons.count
@@ -30,18 +51,25 @@ class CustomKeypad: UIControl, UICollectionViewDataSource {
         return cell
     }
     
+    var keyPressed = ""
+    var buttonTag = 0
+    
+    @objc func buttonPressed(_ sender: UIButton){
+        keyPressed = sender.currentTitle!
+        buttonTag = sender.tag
+        sendActions(for: .valueChanged)
+    }
+    
     func configureViewHierarchy() {
-        let keypadCollection: UICollectionView = {
-            let layout = UICollectionViewFlowLayout()
-            layout.itemSize = CGSize(width: frame.width / 3 - 30, height: frame.width / 3 - 30)
-            layout.minimumInteritemSpacing = 12.5
-            layout.minimumLineSpacing = 15
-            let collection = UICollectionView(frame: frame, collectionViewLayout: layout)
-            collection.translatesAutoresizingMaskIntoConstraints = false
-            collection.backgroundColor = .clear
-            collection.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "MyCell")
-            return collection
-        }()
+        let layout = UICollectionViewFlowLayout()
+        layout.itemSize = CGSize(width: frame.width / 3 - 30, height: frame.width / 3 - 30)
+        layout.minimumInteritemSpacing = 12.5
+        layout.minimumLineSpacing = 15
+        
+        let keypadCollection = UICollectionView(frame: frame, collectionViewLayout: layout)
+        keypadCollection.translatesAutoresizingMaskIntoConstraints = false
+        keypadCollection.backgroundColor = .clear
+        keypadCollection.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "MyCell")
         
         addSubview(keypadCollection)
         NSLayoutConstraint.activate([
@@ -70,10 +98,26 @@ class CustomKeypad: UIControl, UICollectionViewDataSource {
         
         var tag = 0
         buttons = viewLabels.map {
-            let button = CustomButton()
-            button.setView($0,tag)
+            let customButton = CustomButton()
+            customButton.setView($0,tag,buttonBackgroundColor,titleColor,subtitleColor)
             tag += 1
-            return button
+            customButton.button.addTarget(self, action: #selector(buttonPressed), for: .touchDown)
+            return customButton
+        }
+    }
+    
+    var plusPressed = false
+    
+    @objc func longPressZero(_ sender: UIButton) {
+        plusPressed.toggle()
+        if plusPressed {
+            keyPressed = "+"
+            sendActions(for: .valueChanged)
+//            numberLabel.text?.append("+")
+//            if numberLabel.text!.count == 1 {
+//                addNumberButton.isHidden = false
+//                deleteButton.isHidden = false
+//            }
         }
     }
 }
@@ -93,25 +137,27 @@ class CustomButton: UIView {
         clipsToBounds = true
     }
     
-    func setView(_ params: (title: String, subtitle: String),_ tag: Int) {
+    func setView(_ params: (title: String, subtitle: String),_ tag: Int,_ backgroundColor: UIColor,_ titleColor: UIColor,_ subtitleColor: UIColor) {
         titleLabel.text = params.title
         subtitleLabel.text = params.subtitle
         button.setTitle(params.title, for: .normal)
         button.setTitleColor(.clear, for: .normal)
         button.tag = tag
-        setConstraints()
+        setConstraints(backgroundColor: backgroundColor, titleColor: titleColor, subtitleColor: subtitleColor)
     }
     
-    func setConstraints() {
+    func setConstraints(backgroundColor: UIColor, titleColor: UIColor, subtitleColor: UIColor) {
         addSubview(titleLabel)
         addSubview(subtitleLabel)
         addSubview(button)
-        backgroundColor = .systemGray5
+        self.backgroundColor = backgroundColor
         
         titleLabel.font = UIFont.systemFont(ofSize: 40)
+        titleLabel.textColor = titleColor
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         
         subtitleLabel.font = UIFont.systemFont(ofSize: 12)
+        subtitleLabel.textColor = subtitleColor
         subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
         
         button.translatesAutoresizingMaskIntoConstraints = false

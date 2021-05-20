@@ -30,12 +30,13 @@ class CallViewController: UIViewController {
         nameLabel.text = name
         customKeypad.isHidden = true
         hideButton.setTitle("", for: .normal)
-        customKeypad.buttons.forEach {
-            $0.button.addTarget(self, action: #selector(buttonPressed), for: .touchDown)
-            $0.backgroundColor = $0.backgroundColor?.withAlphaComponent(0.1)
-            $0.titleLabel.textColor = .white
-            $0.subtitleLabel.textColor = .white
-        }
+        customKeypad.addTarget(self, action: #selector(buttonPressed), for: .valueChanged)
+        customKeypad.style = .call
+//        customKeypad.buttons.forEach {
+//            $0.backgroundColor = $0.backgroundColor?.withAlphaComponent(0.1)
+//            $0.titleLabel.textColor = .white
+//            $0.subtitleLabel.textColor = .white
+//        }
         runTimer()
     }
     
@@ -78,15 +79,15 @@ class CallViewController: UIViewController {
         return num > 9 ? "\(num)" : "0\(num)"
     }
     
-    @objc func buttonPressed(_ sender: UIButton) {
-        keypadInput.append(sender.currentTitle!)
-        changeNumberBackgroundColor(customKeypad.buttons[sender.tag])
+    @objc func buttonPressed(_ sender: CustomKeypad) {
+        keypadInput.append(sender.keyPressed)
+        changeNumberBackgroundColor(customKeypad.buttons[sender.buttonTag])
     }
     
     func changeNumberBackgroundColor(_ sender: UIView) {
         UIView.animate(withDuration: 1) {
-            sender.backgroundColor = .systemGray3
-            sender.backgroundColor = .systemGray5
+            sender.backgroundColor = sender.backgroundColor?.withAlphaComponent(0.3)
+            sender.backgroundColor = sender.backgroundColor?.withAlphaComponent(0.1)
         }
     }
     

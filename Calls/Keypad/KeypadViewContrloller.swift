@@ -29,12 +29,11 @@ class KeypadViewController: UIViewController {
         super.viewDidLoad()
         
         addNumberButton.isHidden = true
-        customKeypad.buttons.forEach {
-            $0.button.addTarget(self, action: #selector(buttonPressed), for: .touchDown)
-        }
+        customKeypad.addTarget(self, action: #selector(buttonPressed), for: .valueChanged)
+        customKeypad.style = .dial
     }
     
-    @objc func buttonPressed(_ sender: UIButton) {
+    @objc func buttonPressed(_ sender: CustomKeypad) {
         if let first = numberLabel.text!.first {
             switch first {
             case "0":
@@ -58,13 +57,13 @@ class KeypadViewController: UIViewController {
             }
         }
         
-        numberLabel.text?.append(sender.currentTitle!)
+        numberLabel.text?.append(sender.keyPressed)
         
         if numberLabel.text!.count == 1 {
             addNumberButton.isHidden = false
             deleteButton.isHidden = false
         }
-        changeNumberBackgroundColor(customKeypad.buttons[sender.tag])
+        changeNumberBackgroundColor(customKeypad.buttons[sender.buttonTag])
     }
     
     @IBAction func deleteButton(_ sender: UIButton) {
@@ -78,19 +77,9 @@ class KeypadViewController: UIViewController {
             //deleteButton.isHidden = numberLabel.text!.isEmpty
         }
     }
-    @IBAction func longPressZero(_ sender: UILongPressGestureRecognizer) {
-        plusPressed.toggle()
-        if plusPressed {
-            numberLabel.text?.append("+")
-            if numberLabel.text!.count == 1 {
-                addNumberButton.isHidden = false
-                deleteButton.isHidden = false
-            }
-        }
-    }
     
     func changeNumberBackgroundColor(_ sender: UIView) {
-        UIView.animate(withDuration: 1) {
+        UIView.animate(withDuration: 0.1) {
             sender.backgroundColor = .systemGray3
             sender.backgroundColor = .systemGray5
         }
