@@ -52,7 +52,8 @@ class CallViewController: UIViewController {
     
     @IBAction func endCall(_ sender: UIButton) {
         let contactStore = ContactStore.shared
-        let name = contactStore.contactForNumber(number: nameLabel.text!) ?? nameLabel.text!
+        let contact = contactStore.contactForNumber(number: nameLabel.text!)
+        let name = contact?.firstName ?? nameLabel.text!
         let callStore = CallStore.shared
         callStore.createCall(name: name, phoneType: "mobile", date: Date(), isMissed: false, hasIcon: true)
         self.dismiss(animated: false, completion: nil)

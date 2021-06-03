@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ContactViewController: UITableViewController, UISearchResultsUpdating {
+class ContactsViewController: UITableViewController, UISearchResultsUpdating {
     var contactStore = ContactStore.shared
     var searchController: UISearchController!
     
@@ -39,7 +39,7 @@ class ContactViewController: UITableViewController, UISearchResultsUpdating {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) ->         UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ContactCell", for: indexPath) as! ContactCell
         let contact = contactStore.getContact(section: indexPath.section, row: indexPath.row)
-        cell.name.text = contact.name
+        cell.name.text = contact.firstName! + " " + (contact.lastName ?? "")
         return cell
     }
     
@@ -48,17 +48,25 @@ class ContactViewController: UITableViewController, UISearchResultsUpdating {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "CallViewController" {
+        if segue.identifier == "ContactInfo" {
             if let indexPath = tableView.indexPathForSelectedRow {
-                let callViewController = segue.destination as! CallViewController
+                let contactInfoViewController = segue.destination as! ContactInfoViewController
                 let conatct = contactStore.getContact(section: indexPath.section, row: indexPath.row)
-                callViewController.name = conatct.name
+                contactInfoViewController.contact = conatct
             }
             
         } else {
             preconditionFailure("Unexpected segue identifier.")
         }
     }
-
+/*
+     if segue.identifier == "CallViewController" {
+         if let indexPath = tableView.indexPathForSelectedRow {
+             let callViewController = segue.destination as! CallViewController
+             let conatct = contactStore.getContact(section: indexPath.section, row: indexPath.row)
+             callViewController.name = conatct.name
+         }
+         
+     */
 }
 
