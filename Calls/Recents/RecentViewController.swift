@@ -8,7 +8,7 @@
 import UIKit
 
 class RecentViewController: UITableViewController {
-    var callStore: CallStore!
+    var callStore = CallStore.shared
     
     var segmentedControl = UISegmentedControl()
     

@@ -8,10 +8,11 @@
 import UIKit
 
 class KeypadViewController: UIViewController {
-    @IBOutlet var keypadButtonViews: [UIView]!
     @IBOutlet var numberLabel: UILabel!
     @IBOutlet var addNumberButton: UIButton!
     @IBOutlet var deleteButton: UIButton!
+    @IBOutlet var callButton: UIButton!
+    @IBOutlet var customKeypad: CustomKeypad!
     
     var plusPressed = false
    
@@ -19,18 +20,20 @@ class KeypadViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        keypadButtonViews.forEach {
-            $0.layer.cornerRadius = $0.bounds.width * 0.5
-            $0.clipsToBounds = true
-        }
+        
+        callButton.layer.cornerRadius = callButton.bounds.width * 0.5
+        callButton.clipsToBounds = true
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         addNumberButton.isHidden = true
+        customKeypad.addTarget(self, action: #selector(buttonPressed), for: .valueChanged)
+        customKeypad.style = .dial
     }
     
-    @IBAction func buttonPressed(_ sender: UIButton) {
+    @objc func buttonPressed(_ sender: CustomKeypad) {
         if let first = numberLabel.text!.first {
             switch first {
             case "0":
@@ -54,13 +57,13 @@ class KeypadViewController: UIViewController {
             }
         }
         
-        numberLabel.text?.append(sender.currentTitle!)
+        numberLabel.text?.append(sender.keyPressed)
         
         if numberLabel.text!.count == 1 {
             addNumberButton.isHidden = false
             deleteButton.isHidden = false
         }
-        changeNumberBackgroundColor(keypadButtonViews[sender.tag])
+        changeNumberBackgroundColor(customKeypad.buttons[sender.buttonTag])
     }
     
     @IBAction func deleteButton(_ sender: UIButton) {
@@ -70,22 +73,13 @@ class KeypadViewController: UIViewController {
             }
             numberLabel.text!.removeLast()
             addNumberButton.isHidden = numberLabel.text!.isEmpty
-            deleteButton.isHidden = numberLabel.text!.isEmpty
-        }
-    }
-    @IBAction func longPressZero(_ sender: UILongPressGestureRecognizer) {
-        plusPressed.toggle()
-        if plusPressed {
-            numberLabel.text?.append("+")
-            if numberLabel.text!.count == 1 {
-                addNumberButton.isHidden = false
-                deleteButton.isHidden = false
-            }
+            deleteButton.imageView?.isHidden = numberLabel.text!.isEmpty
+            //deleteButton.isHidden = numberLabel.text!.isEmpty
         }
     }
     
     func changeNumberBackgroundColor(_ sender: UIView) {
-        UIView.animate(withDuration: 1) {
+        UIView.animate(withDuration: 0.1) {
             sender.backgroundColor = .systemGray3
             sender.backgroundColor = .systemGray5
         }
@@ -95,7 +89,7 @@ class KeypadViewController: UIViewController {
         if segue.identifier == "CallViewController" {
             let callViewController = segue.destination as! CallViewController
             callViewController.name = numberLabel.text
-        } else {
+        } else if segue.identifier != "Keypad" {
             preconditionFailure("Unexpected segue identifier.")
         }
     }
