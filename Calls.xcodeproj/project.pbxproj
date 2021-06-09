@@ -26,8 +26,6 @@
 		7A87E79E2668D46300B422FE /* TagsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A87E79D2668D46300B422FE /* TagsViewController.swift */; };
 		7A87E7A12668D4AA00B422FE /* TagsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A87E7A02668D4AA00B422FE /* TagsDataSource.swift */; };
 		7A87E7A52668D50C00B422FE /* Contacts.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7A87E7A32668D50C00B422FE /* Contacts.xcdatamodeld */; };
-		7A87E7A92668D85800B422FE /* Tag+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A87E7A72668D85800B422FE /* Tag+CoreDataClass.swift */; };
-		7A87E7AA2668D85800B422FE /* Tag+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A87E7A82668D85800B422FE /* Tag+CoreDataProperties.swift */; };
 		7A89DD2A2632EFCF00D23AEE /* KeypadViewContrloller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A89DD292632EFCF00D23AEE /* KeypadViewContrloller.swift */; };
 		7A8EA7BD2636B5E700721182 /* CallViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8EA7BC2636B5E700721182 /* CallViewController.swift */; };
 		7AB8F9632668ED4D00CCCD47 /* Contact+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AB8F9612668ED4D00CCCD47 /* Contact+CoreDataClass.swift */; };
@@ -57,8 +55,6 @@
 		7A87E79D2668D46300B422FE /* TagsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsViewController.swift; sourceTree = "<group>"; };
 		7A87E7A02668D4AA00B422FE /* TagsDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsDataSource.swift; sourceTree = "<group>"; };
 		7A87E7A42668D50C00B422FE /* Contacts.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Contacts.xcdatamodel; sourceTree = "<group>"; };
-		7A87E7A72668D85800B422FE /* Tag+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Tag+CoreDataClass.swift"; sourceTree = "<group>"; };
-		7A87E7A82668D85800B422FE /* Tag+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Tag+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		7A89DD292632EFCF00D23AEE /* KeypadViewContrloller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeypadViewContrloller.swift; sourceTree = "<group>"; };
 		7A8EA7BC2636B5E700721182 /* CallViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallViewController.swift; sourceTree = "<group>"; };
 		7AB8F9612668ED4D00CCCD47 /* Contact+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Contact+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -82,8 +78,6 @@
 			children = (
 				7AB8F9612668ED4D00CCCD47 /* Contact+CoreDataClass.swift */,
 				7AB8F9622668ED4D00CCCD47 /* Contact+CoreDataProperties.swift */,
-				7A87E7A72668D85800B422FE /* Tag+CoreDataClass.swift */,
-				7A87E7A82668D85800B422FE /* Tag+CoreDataProperties.swift */,
 				0E275A8026304142008A9149 /* .gitignore */,
 				0E256F272629A9500045B39F /* Calls */,
 				0E256F262629A9500045B39F /* Products */,
@@ -230,7 +224,6 @@
 				7A7CD9AC26662DB300819C10 /* ContactInfoViewController.swift in Sources */,
 				7AB8F9642668ED4D00CCCD47 /* Contact+CoreDataProperties.swift in Sources */,
 				0E37EDFD262DC3C30099F19B /* ContactsViewController.swift in Sources */,
-				7A87E7AA2668D85800B422FE /* Tag+CoreDataProperties.swift in Sources */,
 				7A7CD9AF26668ADE00819C10 /* EditContactViewController.swift in Sources */,
 				0EEC1A242641846100F82E04 /* CustomKeypad.swift in Sources */,
 				7A87E7A52668D50C00B422FE /* Contacts.xcdatamodeld in Sources */,
@@ -238,7 +231,6 @@
 				0E256F2B2629A9500045B39F /* SceneDelegate.swift in Sources */,
 				7A8EA7BD2636B5E700721182 /* CallViewController.swift in Sources */,
 				7A87E7A12668D4AA00B422FE /* TagsDataSource.swift in Sources */,
-				7A87E7A92668D85800B422FE /* Tag+CoreDataClass.swift in Sources */,
 				0E37EDF22629CDD70099F19B /* OtherViewControllers.swift in Sources */,
 				0E256F3E2629A9A60045B39F /* CallStore.swift in Sources */,
 				7A89DD2A2632EFCF00D23AEE /* KeypadViewContrloller.swift in Sources */,

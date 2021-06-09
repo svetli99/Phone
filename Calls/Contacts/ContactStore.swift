@@ -48,8 +48,7 @@ class ContactStore {
     
     private func loadContacts() {
         let fetchRequest: NSFetchRequest<Contact> = Contact.fetchRequest()
-        let sortByDateTaken = NSSortDescriptor(key: #keyPath(Contact.firstName),
-                                               ascending: true)
+        let sortByDateTaken = NSSortDescriptor(key: #keyPath(Contact.firstName),ascending: true)
         fetchRequest.sortDescriptors = [sortByDateTaken]
         
         let viewContext = persistentContainer.viewContext
@@ -74,35 +73,18 @@ class ContactStore {
         }
     }
     
-//    private func fetchAllTags() -> [String] {
-//        let fetchRequest: NSFetchRequest<Tag> = Tag.fetchRequest()
-//        let sortByName = NSSortDescriptor(key: #keyPath(Tag.name), ascending: true)
-//        fetchRequest.sortDescriptors = [sortByName]
-//
-//        let viewContext = persistentContainer.viewContext
-//        var tags: [String] = []
-//        viewContext.performAndWait {
-//            tags = (try? fetchRequest.execute()) ?? []
-//        }
-//        return tags
-//    }
-//
+    func addNewContact(contact: Contact) {
+        
+    }
+
     private func parseJSON(_ contact: Contact) {
         guard let data = contact.json?.data(using: .utf8) else { return }
         
         do {
-            let jsonDictionary = try JSONSerialization.jsonObject(with: data, options : .allowFragments) as! Dictionary<String,Dictionary<String,String>>
-            
-            contact.number = setAttribute(jsonDictionary, "number")
-            contact.email = setAttribute(jsonDictionary, "email")
-            contact.url = setAttribute(jsonDictionary, "url")
-            contact.address = setAttribute(jsonDictionary, "address")
-            contact.birthday = setAttribute(jsonDictionary, "birthday")
-            contact.date = setAttribute(jsonDictionary, "date")
-            contact.relatedName = setAttribute(jsonDictionary, "relatedName")
-            contact.instantMessage = setAttribute(jsonDictionary, "instantMessage")
-            contact.socialProfile = setAttribute(jsonDictionary, "socialProfile")
-            
+            let jsonDictionary = try JSONSerialization.jsonObject(with: data, options : .allowFragments) as! [String:[String:[String]]]
+
+            contact.jsonDictionary = jsonDictionary
+            setAllAttributes(contact)
             
         } catch let error as NSError {
             print(error)
@@ -110,10 +92,46 @@ class ContactStore {
         
     }
     
-    private func setAttribute(_ dictionary: [String:[String:String]],_ name: String) -> [(String,String)]? {
+    private func setAttribute(_ dictionary: [String:[String:[String]]],_ name: String) -> [(String,String)]? {
         if let dict = dictionary[name] {
+            return dict.map { ($0.key,$0.value.first!) }
+        }
+        return nil
+    }
+    
+    private func setAddress(_ dictionary: [String:[String:[String]]]) -> [(String,[String])]?  {
+        if let dict = dictionary["Address"] {
             return dict.map { ($0.key,$0.value) }
         }
         return nil
+    }
+    
+    func setAllAttributes(_ contact: Contact) {
+        contact.number = setAttribute(contact.jsonDictionary, "Phone")
+        contact.email = setAttribute(contact.jsonDictionary, "Email")
+        contact.url = setAttribute(contact.jsonDictionary, "URL")
+        contact.address = setAddress(contact.jsonDictionary)
+        contact.birthday = setAttribute(contact.jsonDictionary, "Birthday")
+        contact.date = setAttribute(contact.jsonDictionary, "Date")
+        contact.relatedName = setAttribute(contact.jsonDictionary, "Related Name")
+        contact.instantMessage = setAttribute(contact.jsonDictionary, "Message")
+        contact.socialProfile = setAttribute(contact.jsonDictionary, "Social Profile")
+    }
+    
+    func parseToJSON(_ contact: Contact,_ dict: [String:[String:[String]]]) {
+        guard !dict.isEmpty else { return }
+        
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: dict, options: .prettyPrinted)
+            contact.json = String(data: jsonData, encoding: .utf8)
+        } catch {
+            print("Error parsing dict to data",error)
+        }
+        
+        do {
+            try persistentContainer.viewContext.save()
+        } catch {
+            print("Core Data save failed: \(error).")
+        }
     }
 }

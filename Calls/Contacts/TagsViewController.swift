@@ -39,7 +39,6 @@ class TagsViewController: UITableViewController {
                             forRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {
             cell.accessoryType = selectedTagIndex == indexPath.row ? .checkmark : .none
-
         }
     }
     

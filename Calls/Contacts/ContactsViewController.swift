@@ -14,8 +14,6 @@ class ContactsViewController: UITableViewController, UISearchResultsUpdating {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        tableView.rowHeight = UITableView.automaticDimension
-//        tableView.estimatedRowHeight = 65
         tableView.rowHeight = 40
         navigationController?.navigationBar.prefersLargeTitles = true
         searchController = UISearchController()
@@ -39,7 +37,7 @@ class ContactsViewController: UITableViewController, UISearchResultsUpdating {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) ->         UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ContactCell", for: indexPath) as! ContactCell
         let contact = contactStore.getContact(section: indexPath.section, row: indexPath.row)
-        cell.name.text = contact.firstName! + " " + (contact.lastName ?? "")
+        cell.name.text = (contact.firstName ?? "") + " " + (contact.lastName ?? "")
         return cell
     }
     
@@ -48,14 +46,19 @@ class ContactsViewController: UITableViewController, UISearchResultsUpdating {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "ContactInfo" {
+        switch segue.identifier {
+        case "ContactInfo":
             if let indexPath = tableView.indexPathForSelectedRow {
                 let contactInfoViewController = segue.destination as! ContactInfoViewController
                 let conatct = contactStore.getContact(section: indexPath.section, row: indexPath.row)
                 contactInfoViewController.contact = conatct
             }
-            
-        } else {
+        case "NewContact":
+            let navVC = segue.destination as! UINavigationController
+            let editContactViewController = navVC.topViewController as! EditContactViewController
+            editContactViewController.contact = Contact()
+            editContactViewController.isNew = true
+        default:
             preconditionFailure("Unexpected segue identifier.")
         }
     }

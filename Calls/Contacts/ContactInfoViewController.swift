@@ -1,17 +1,15 @@
 import UIKit
 
 class ContactInfoViewController: UITableViewController {
-    var labelTitles = [
-        [],
-        [],
+    let fixedLabels = [
+        [[""]],
         [["Send Message"],["Share Contact"],["Add to Fovourites"]],
         [["Add to Emergency Contacts"]],
         [["Share My Location"]],
         [["Block this Caller"]]
     ]
     
-    var cellIdentifires = [
-        [],
+    let fixedIdentifires = [
         ["Notes"],
         ["Cell","Cell","Cell"],
         ["Cell"],
@@ -19,16 +17,15 @@ class ContactInfoViewController: UITableViewController {
         ["Block"]
     ]
     
+    var labelTitles = [[[String]]]()
+    
+    var cellIdentifires = [[String]]()
+    
     @IBOutlet var nameLabel: UILabel!
     @IBOutlet var IDLabel: UILabel!
     
-    var contact: Contact! {
-        didSet {
-            name = contact.firstName! + " " + (contact.lastName ?? "")
-            
-            addNumberCells(contact.number, numSection)
-        }
-    }
+    var contact: Contact! 
+    
     var name: String! {
         didSet {
             nameLabel.text = name
@@ -36,11 +33,34 @@ class ContactInfoViewController: UITableViewController {
         }
     }
     
+    var notes: String!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         navigationController?.navigationBar.prefersLargeTitles = true
-        //tableView.section = .blue
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        labelTitles = fixedLabels
+        cellIdentifires = fixedIdentifires
+        
+        name = contact.firstName! + " " + (contact.lastName ?? "")
+        notes = contact.notes
+        
+        var section = 0
+        addNumberCells(contact.number, &section)
+        addNumberCells(contact.email, &section)
+        addNumberCells(contact.url, &section)
+        addAddressCells(&section)
+        addNumberCells(contact.birthday, &section)
+        addNumberCells(contact.date, &section)
+        addNumberCells(contact.relatedName, &section)
+        addNumberCells(contact.socialProfile, &section)
+        addNumberCells(contact.instantMessage, &section)
+        tableView.reloadData()
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -48,19 +68,30 @@ class ContactInfoViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        labelTitles[section].count
+        cellIdentifires[section].count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifires[indexPath.section][indexPath.row], for: indexPath)
-        if let custom = cell as? NumberCell {
-            custom.tagName.text = labelTitles[indexPath.section][indexPath.row][0]
+        switch cell {
+        case let custom as NumberCell:
+            custom.tagName.text = labelTitles[indexPath.section][indexPath.row].first
             custom.number.text = labelTitles[indexPath.section][indexPath.row][1]
             cell = custom
-        }else if let custom = cell as? ButtonCell  {
+        case let custom as ButtonCell:
             custom.label.text = labelTitles[indexPath.section][indexPath.row][0]
             cell = custom
+        case let custom as NotesCell:
+            custom.textField.text = notes
+        case let custom as AddressInfoCell:
+            custom.tagName.text = labelTitles[indexPath.section][indexPath.row].first
+            let texts = Array(labelTitles[indexPath.section][indexPath.row][1...])
+            addLabels(custom, texts: texts)
+            tableView.reloadRows(at: [indexPath], with: .none)
+        default:
+            break
         }
+        
         return cell
     }
     
@@ -74,13 +105,40 @@ class ContactInfoViewController: UITableViewController {
         }
     }
     
-    private func addNumberCells(_ array: [(String, String)]?,_ section: Int) {
+    private func addNumberCells(_ array: [(String, String)]?,_ section: inout Int) {
         guard let arr = array else { return }
-        var index = labelTitles[section].count 
+        var index = 0
+        labelTitles.insert([], at: section)
+        cellIdentifires.insert([], at: section)
         arr.forEach { pair in
             labelTitles[section].insert([pair.0,pair.1], at: index)
             cellIdentifires[section].insert("Number", at: index)
             index += 1
+        }
+        section += 1
+    }
+    
+    private func addAddressCells(_ section: inout Int) {
+        guard let arr = contact.address else { return }
+        var index = 0
+        labelTitles.insert([], at: section)
+        cellIdentifires.insert([], at: section)
+        arr.forEach { pair in
+            labelTitles[section].insert([pair.0] + pair.1, at: index)
+            cellIdentifires[section].insert("Address", at: index)
+            index += 1
+        }
+        section += 1
+    }
+    
+    private func addLabels(_ cell: AddressInfoCell, texts: [String]) {
+        for (i, text) in texts.enumerated() {
+            if text != "" {
+                cell.labels[i].isHidden = false
+                cell.labels[i].text = text
+            } else {
+                cell.labels[i].isHidden = true
+            }
         }
     }
     
