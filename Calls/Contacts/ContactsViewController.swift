@@ -7,21 +7,24 @@
 
 import UIKit
 
-class ContactViewController: UITableViewController, UISearchResultsUpdating {
-    var contactStore: ContactStore!
+class ContactsViewController: UITableViewController, UISearchResultsUpdating {
+    var contactStore = ContactStore.shared
     var searchController: UISearchController!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        tableView.rowHeight = UITableView.automaticDimension
-//        tableView.estimatedRowHeight = 65
         tableView.rowHeight = 40
         navigationController?.navigationBar.prefersLargeTitles = true
         searchController = UISearchController()
         navigationItem.searchController = searchController
         searchController.searchResultsUpdater = self
         navigationItem.hidesSearchBarWhenScrolling = false
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tableView.reloadData()
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -39,26 +42,39 @@ class ContactViewController: UITableViewController, UISearchResultsUpdating {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) ->         UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ContactCell", for: indexPath) as! ContactCell
         let contact = contactStore.getContact(section: indexPath.section, row: indexPath.row)
-        cell.name.text = contact.name
+        cell.name.text = (contact.firstName ?? "") + " " + (contact.lastName ?? "")
         return cell
     }
     
     func updateSearchResults(for searchController: UISearchController) {
-        searchController.textInputContextIdentifier
+        //searchController.textInputContextIdentifier
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "CallViewController" {
+        switch segue.identifier {
+        case "ContactInfo":
             if let indexPath = tableView.indexPathForSelectedRow {
-                let callViewController = segue.destination as! CallViewController
+                let contactInfoViewController = segue.destination as! ContactInfoViewController
                 let conatct = contactStore.getContact(section: indexPath.section, row: indexPath.row)
-                callViewController.name = conatct.name
+                contactInfoViewController.contact = conatct
             }
-            
-        } else {
+        case "NewContact":
+            let navVC = segue.destination as! UINavigationController
+            let editContactViewController = navVC.topViewController as! EditContactViewController
+            editContactViewController.isNew = true
+            editContactViewController.contact = contactStore.createContact()
+        default:
             preconditionFailure("Unexpected segue identifier.")
         }
     }
-
+/*
+     if segue.identifier == "CallViewController" {
+         if let indexPath = tableView.indexPathForSelectedRow {
+             let callViewController = segue.destination as! CallViewController
+             let conatct = contactStore.getContact(section: indexPath.section, row: indexPath.row)
+             callViewController.name = conatct.name
+         }
+         
+     */
 }
 
