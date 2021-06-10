@@ -73,7 +73,51 @@ class ContactStore {
         }
     }
     
+    func createContact() -> Contact{
+        let viewContext = persistentContainer.viewContext
+        var newContact: Contact!
+        viewContext.performAndWait {
+            newContact = Contact(context: viewContext)
+        }
+        
+        return newContact
+    }
+    
     func addNewContact(contact: Contact) {
+        let first = contact.firstName?.first ?? contact.lastName!.first!
+        if let section = allContacts.firstIndex(where: { $0.0 == first }) {
+            allContacts[section].1.append(contact)
+            allContacts[section].1.sort(by: {$0.firstName! < $1.firstName!})
+        } else {
+            allContacts.append((first,[contact]))
+            allContacts.sort(by: {$0.0 < $1.0})
+        }
+        
+        do {
+            try persistentContainer.viewContext.save()
+        } catch {
+            print("Core Data save failed: \(error).")
+        }
+    }
+    
+    func deleteContact(contact: Contact) {
+        let first = contact.firstName?.first ?? contact.lastName!.first!
+        let section = allContacts.firstIndex(where: { $0.0 == first })!
+        allContacts[section].1.removeAll(where: {$0 == contact})
+        if allContacts[section].1.isEmpty {
+            allContacts.remove(at: section)
+        }
+        
+        let context = persistentContainer.viewContext
+        context.delete(contact)
+        
+        do {
+            try persistentContainer.viewContext.save()
+        } catch {
+            print("Error saving delete contact: \(error)")
+        }
+        
+        
         
     }
 

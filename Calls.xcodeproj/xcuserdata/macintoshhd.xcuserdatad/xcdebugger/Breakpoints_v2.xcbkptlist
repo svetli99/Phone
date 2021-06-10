@@ -46,8 +46,8 @@
             filePath = "Calls/Contacts/EditContactViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "328"
-            endingLineNumber = "328"
+            startingLineNumber = "360"
+            endingLineNumber = "360"
             landmarkName = "getName(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -62,8 +62,8 @@
             filePath = "Calls/Contacts/EditContactViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "288"
-            endingLineNumber = "288"
+            startingLineNumber = "320"
+            endingLineNumber = "320"
             landmarkName = "addNames()"
             landmarkType = "7">
          </BreakpointContent>
@@ -94,8 +94,8 @@
             filePath = "Calls/Contacts/EditContactViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "318"
-            endingLineNumber = "318"
+            startingLineNumber = "350"
+            endingLineNumber = "350"
             landmarkName = "moveArrow(_:_:)"
             landmarkType = "7">
          </BreakpointContent>

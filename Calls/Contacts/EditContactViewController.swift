@@ -5,17 +5,21 @@ class EditContactViewController: UITableViewController {
     // TO DO: Notes
     var contact: Contact! {
         didSet {
-            
-            addNames()
-            addRemoveCells(contact.number, numberSection)
-            addRemoveCells(contact.email, emailSection)
-            addRemoveCells(contact.url, urlSection)
-            addAddressCells(contact.address, addressSection)
-            addRemoveCells(contact.birthday, birthdaySection)
-            addRemoveCells(contact.date, dateSection)
-            addRemoveCells(contact.relatedName, relatedNameSection)
-            addRemoveCells(contact.socialProfile, socialProfileSection)
-            addRemoveCells(contact.instantMessage, messageSection)
+            if isNew {
+                labelTitles.removeLast()
+                cellIdentifires.removeLast()
+            } else {
+                addNames()
+                addRemoveCells(contact.number, numberSection)
+                addRemoveCells(contact.email, emailSection)
+                addRemoveCells(contact.url, urlSection)
+                addAddressCells(contact.address, addressSection)
+                addRemoveCells(contact.birthday, birthdaySection)
+                addRemoveCells(contact.date, dateSection)
+                addRemoveCells(contact.relatedName, relatedNameSection)
+                addRemoveCells(contact.socialProfile, socialProfileSection)
+                addRemoveCells(contact.instantMessage, messageSection)
+            }
         }
     }
     
@@ -193,13 +197,33 @@ class EditContactViewController: UITableViewController {
                 let labels = [tagName] + addressData(["","","","",""])
                 labelTitles[indexPath.section].insert(labels, at: indexPath.row)
                 tableView.insertRows(at: [indexPath], with: .automatic)
-            } else {
+            } else if custom.label.text!.hasPrefix("add") {
                 cellIdentifires[indexPath.section].insert("Remove", at: indexPath.row)
                 let placeholder = labelTitles[indexPath.section][indexPath.row][1]
                 let usedTags = labelTitles[indexPath.section].map{$0[0]}
                 let tagName = store.tags.first(where: { !usedTags.contains($0) }) ?? store.tags.first!
                 labelTitles[indexPath.section].insert([tagName, placeholder,""], at: indexPath.row)
                 tableView.insertRows(at: [indexPath], with: .automatic)
+            } else if custom.label.text == "Delete contact" {
+                let alertController = UIAlertController(title: nil,message: nil,preferredStyle: .actionSheet)
+                
+                alertController.modalPresentationStyle = .popover
+                
+                let delete = UIAlertAction(title: "Delete Contact", style: .destructive) { _ in
+                    self.store.deleteContact(contact: self.contact)
+//                    self.dismiss(animated: true) {
+//                        self.presentingViewController?.navigationController?.popToRootViewController(animated: true)
+//                    }
+                    let nextViewController = Calls.ContactsViewController()
+                    self.present(nextViewController, animated: true, completion: nil)
+//                    self.navigationController?.pushViewController(nextViewController, animated: true)
+                }
+                alertController.addAction(delete)
+
+                let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+                alertController.addAction(cancel)
+                
+                present(alertController, animated: true, completion: nil)
             }
         }
     }
@@ -221,7 +245,8 @@ class EditContactViewController: UITableViewController {
     }
     
     @IBAction func cancel(_ sender: UIBarButtonItem) {
-        let alertController = UIAlertController(title: "Are you shure you want to discard your changes?",message: nil,preferredStyle: .actionSheet)
+        let title = "Are you shure you want to discard " + (isNew ? "this new contact?" : "your changes?")
+        let alertController = UIAlertController(title: title, message: nil, preferredStyle: .actionSheet)
         
         alertController.modalPresentationStyle = .popover
         alertController.popoverPresentationController?.barButtonItem = sender
@@ -241,6 +266,11 @@ class EditContactViewController: UITableViewController {
         var jsonDictionary = [String:[String:[String]]]()
         contact.firstName = getName(labelTitles[0][0])
         contact.lastName = getName(labelTitles[0][1])
+        
+        guard contact.firstName != nil || contact.lastName != nil else {
+            return
+        }
+        
         contact.company = getName(labelTitles[0][2])
         contact.notes = getName(labelTitles[12][0])
         for arr in labelTitles[1...] where arr.count > 1 {
@@ -265,7 +295,9 @@ class EditContactViewController: UITableViewController {
         contact.jsonDictionary = jsonDictionary
         store.parseToJSON(contact, jsonDictionary)
         store.setAllAttributes(contact)
-        
+        if isNew {
+            store.addNewContact(contact: contact)
+        }
         dismiss(animated: true)
     }
     

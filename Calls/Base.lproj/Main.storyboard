@@ -656,7 +656,7 @@
                                         <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="cUi-DM-NgQ" customClass="MyTextField" customModule="Calls" customModuleProvider="target">
                                             <rect key="frame" x="20" y="11" width="374" height="22.5"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <textInputTraits key="textInputTraits"/>
+                                            <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
                                         </textField>
                                     </subviews>
                                     <constraints>
@@ -929,7 +929,7 @@
                                                         <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="4VO-Go-uVo" customClass="MyTextField" customModule="Calls" customModuleProvider="target">
                                                             <rect key="frame" x="10" y="10" width="269" height="41"/>
                                                             <fontDescription key="fontDescription" type="system" weight="medium" pointSize="20"/>
-                                                            <textInputTraits key="textInputTraits"/>
+                                                            <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
                                                         </textField>
                                                     </subviews>
                                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -946,7 +946,7 @@
                                                         <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="CeD-1e-rBb" customClass="MyTextField" customModule="Calls" customModuleProvider="target">
                                                             <rect key="frame" x="10" y="10" width="269" height="41"/>
                                                             <fontDescription key="fontDescription" type="system" weight="medium" pointSize="20"/>
-                                                            <textInputTraits key="textInputTraits"/>
+                                                            <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
                                                         </textField>
                                                     </subviews>
                                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -966,7 +966,7 @@
                                                                 <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="pmt-wu-1Hf" customClass="MyTextField" customModule="Calls" customModuleProvider="target">
                                                                     <rect key="frame" x="10" y="10" width="134.5" height="41"/>
                                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="20"/>
-                                                                    <textInputTraits key="textInputTraits"/>
+                                                                    <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
                                                                 </textField>
                                                             </subviews>
                                                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -983,7 +983,7 @@
                                                                 <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="8qx-0q-hCj" customClass="MyTextField" customModule="Calls" customModuleProvider="target">
                                                                     <rect key="frame" x="10" y="10" width="124.5" height="41"/>
                                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="20"/>
-                                                                    <textInputTraits key="textInputTraits"/>
+                                                                    <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
                                                                 </textField>
                                                             </subviews>
                                                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -1002,7 +1002,7 @@
                                                         <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="U1p-tD-fBU" customClass="MyTextField" customModule="Calls" customModuleProvider="target">
                                                             <rect key="frame" x="10" y="10" width="269" height="41"/>
                                                             <fontDescription key="fontDescription" type="system" weight="medium" pointSize="20"/>
-                                                            <textInputTraits key="textInputTraits"/>
+                                                            <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
                                                         </textField>
                                                     </subviews>
                                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -1491,7 +1491,7 @@
         <!--Contacts-->
         <scene sceneID="95g-sg-p10">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="U0v-lu-id4" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="Contacts" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="U0v-lu-id4" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Contacts" image="person.crop.circle" catalog="system" id="I9g-nl-Lb8"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="6Tm-BK-6vy">
@@ -1547,7 +1547,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="0el-Dv-KU6"/>
+        <segue reference="2Ws-co-sbX"/>
         <segue reference="9M6-sd-IRd"/>
         <segue reference="ufe-xL-Gzp"/>
     </inferredMetricsTieBreakers>

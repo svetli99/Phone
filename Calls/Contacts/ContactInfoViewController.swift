@@ -47,7 +47,7 @@ class ContactInfoViewController: UITableViewController {
         labelTitles = fixedLabels
         cellIdentifires = fixedIdentifires
         
-        name = contact.firstName! + " " + (contact.lastName ?? "")
+        name = (contact.firstName ?? "") + " " + (contact.lastName ?? "")
         notes = contact.notes
         
         var section = 0

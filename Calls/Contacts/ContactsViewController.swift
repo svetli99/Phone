@@ -22,6 +22,11 @@ class ContactsViewController: UITableViewController, UISearchResultsUpdating {
         navigationItem.hidesSearchBarWhenScrolling = false
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tableView.reloadData()
+    }
+    
     override func numberOfSections(in tableView: UITableView) -> Int {
         return contactStore.allContacts.count
     }
@@ -56,8 +61,8 @@ class ContactsViewController: UITableViewController, UISearchResultsUpdating {
         case "NewContact":
             let navVC = segue.destination as! UINavigationController
             let editContactViewController = navVC.topViewController as! EditContactViewController
-            editContactViewController.contact = Contact()
             editContactViewController.isNew = true
+            editContactViewController.contact = contactStore.createContact()
         default:
             preconditionFailure("Unexpected segue identifier.")
         }
