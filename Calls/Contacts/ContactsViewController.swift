@@ -22,13 +22,13 @@ class ContactsViewController: UITableViewController, UISearchResultsUpdating {
         navigationItem.hidesSearchBarWhenScrolling = false
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         tableView.reloadData()
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return contactStore.allContacts.count
+        return contactStore.groupedContacts.count
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {

@@ -1,6 +1,7 @@
 import UIKit
 
 class ContactInfoViewController: UITableViewController {
+    let store = ContactStore.shared
     let fixedLabels = [
         [[""]],
         [["Send Message"],["Share Contact"],["Add to Fovourites"]],
@@ -51,15 +52,15 @@ class ContactInfoViewController: UITableViewController {
         notes = contact.notes
         
         var section = 0
-        addNumberCells(contact.number, &section)
-        addNumberCells(contact.email, &section)
-        addNumberCells(contact.url, &section)
-        addAddressCells(&section)
-        addNumberCells(contact.birthday, &section)
-        addNumberCells(contact.date, &section)
-        addNumberCells(contact.relatedName, &section)
-        addNumberCells(contact.socialProfile, &section)
-        addNumberCells(contact.instantMessage, &section)
+        addInfoCells(contact.noAttributesItems.phone, &section)
+        addInfoCells(contact.noAttributesItems.email, &section)
+        addInfoCells(contact.noAttributesItems.url, &section)
+        addInfoCells(contact.noAttributesItems.address, &section)
+        addInfoCells(contact.noAttributesItems.birthday, &section)
+        addInfoCells(contact.noAttributesItems.date, &section)
+        addInfoCells(contact.noAttributesItems.relatedName, &section)
+        addInfoCells(contact.noAttributesItems.socialProfile, &section)
+        addInfoCells(contact.noAttributesItems.instantMessage, &section)
         tableView.reloadData()
     }
     
@@ -74,8 +75,8 @@ class ContactInfoViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifires[indexPath.section][indexPath.row], for: indexPath)
         switch cell {
-        case let custom as NumberCell:
-            custom.tagName.text = labelTitles[indexPath.section][indexPath.row].first
+        case let custom as InfoCell:
+            custom.type.text = labelTitles[indexPath.section][indexPath.row].first
             custom.number.text = labelTitles[indexPath.section][indexPath.row][1]
             cell = custom
         case let custom as ButtonCell:
@@ -84,7 +85,7 @@ class ContactInfoViewController: UITableViewController {
         case let custom as NotesCell:
             custom.textField.text = notes
         case let custom as AddressInfoCell:
-            custom.tagName.text = labelTitles[indexPath.section][indexPath.row].first
+            custom.type.text = labelTitles[indexPath.section][indexPath.row].first
             let texts = Array(labelTitles[indexPath.section][indexPath.row][1...])
             addLabels(custom, texts: texts)
             tableView.reloadRows(at: [indexPath], with: .none)
@@ -93,6 +94,28 @@ class ContactInfoViewController: UITableViewController {
         }
         
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let cell = tableView.cellForRow(at: indexPath)
+        if cell is InfoCell, indexPath.section == 0 {
+            let callViewController = storyboard?.instantiateViewController(identifier: "Dial") as! CallViewController
+            callViewController.name = name
+            callViewController.modalPresentationStyle = .fullScreen
+            present(callViewController, animated: true, completion: nil)
+        } else if cell is ButtonCell, indexPath.row == 2 {
+            let alertStoryboard = UIStoryboard(name: "AlertStoryboard", bundle: nil)
+            let alertController = alertStoryboard.instantiateViewController(withIdentifier: "MyAlert") as! AlertViewController
+            alertController.contact = contact
+            alertController.modalPresentationStyle = .overFullScreen
+            present(alertController, animated: true, completion: nil)
+            do {
+                try store.persistentContainer.viewContext.save()
+            } catch {
+                print("Error save isFavourite: \(error)")
+            }
+        }
+        tableView.deselectRow(at: indexPath, animated: true)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -105,27 +128,22 @@ class ContactInfoViewController: UITableViewController {
         }
     }
     
-    private func addNumberCells(_ array: [(String, String)]?,_ section: inout Int) {
-        guard let arr = array else { return }
+    private func addInfoCells(_ arr: [Any]?,_ section: inout Int) {
+        guard let arr = arr else { return }
         var index = 0
         labelTitles.insert([], at: section)
         cellIdentifires.insert([], at: section)
-        arr.forEach { pair in
-            labelTitles[section].insert([pair.0,pair.1], at: index)
-            cellIdentifires[section].insert("Number", at: index)
-            index += 1
-        }
-        section += 1
-    }
-    
-    private func addAddressCells(_ section: inout Int) {
-        guard let arr = contact.address else { return }
-        var index = 0
-        labelTitles.insert([], at: section)
-        cellIdentifires.insert([], at: section)
-        arr.forEach { pair in
-            labelTitles[section].insert([pair.0] + pair.1, at: index)
-            cellIdentifires[section].insert("Address", at: index)
+        arr.forEach { info in
+            switch info {
+            case let info as ContactInfoItem:
+                labelTitles[section].insert([info.type,info.value], at: index)
+                cellIdentifires[section].insert("Info", at: index)
+            case let info as ContactAddress:
+                labelTitles[section].insert([info.type,info.street1,info.street2,info.postCode,info.city,info.country], at: index)
+                cellIdentifires[section].insert("Address", at: index)
+            default:
+                break
+            }
             index += 1
         }
         section += 1

@@ -14,7 +14,7 @@ enum KeypadStyles {
 class CustomKeypad: UIControl, UICollectionViewDataSource {
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        configureViewHierarchy()
+        //configureViewHierarchy()
     }
     
     var buttonBackgroundColor: UIColor = .systemGray5
@@ -28,15 +28,17 @@ class CustomKeypad: UIControl, UICollectionViewDataSource {
                 buttonBackgroundColor = .systemGray5
                 titleColor = .black
                 subtitleColor = .black
+                configureViewHierarchy()
                 let zeroButtonIndex = buttons.firstIndex { $0.titleLabel.text == "0" }!
                 let zeroButton = buttons[zeroButtonIndex]
                 let gestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressZero))
                 zeroButton.button.addGestureRecognizer(gestureRecognizer)
                 
             } else if style == .call {
-                buttonBackgroundColor = backgroundColor!
+                buttonBackgroundColor = backgroundColor!.withAlphaComponent(0.1)
                 titleColor = .white
                 subtitleColor = .white
+                configureViewHierarchy()
             }
         }
     }

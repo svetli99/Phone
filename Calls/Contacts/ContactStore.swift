@@ -5,9 +5,28 @@ import CoreData
 class ContactStore {
     static var shared = ContactStore()
     
-    var allContacts = [(Character, [Contact])]()
+    var allContacts = [Contact]() {
+        didSet {
+            var grContacts = [(Character,[Contact])]()
+            for contact in allContacts {
+                let first = contact.firstName!.first!
+                self.parseJSON(contact)
+                
+                if let index = grContacts.firstIndex(where: { $0.0 == first }) {
+                    grContacts[index].1.append(contact)
+                } else {
+                    grContacts.append((first,[contact]))
+                }
+            }
+            groupedContacts = grContacts
+        }
+    }
     
-    lazy var tags = ["mobile","home","work","school","other"]
+    var groupedContacts = [(Character, [Contact])]() 
+    
+    var favouriteContacts = [(Contact,String)]()
+    
+    var tags = ["mobile","home","work","school","other"]
     
     let persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "Contacts")
@@ -21,26 +40,25 @@ class ContactStore {
     
     private init() {
         loadContacts()
+        updateFavourites()
     }
     
     func getNumberOfRows(_ section: Int) -> Int {
-        allContacts[section].1.count
+        groupedContacts[section].1.count
     }
     
     func getContact(section: Int, row: Int) -> Contact {
-        allContacts[section].1[row]
+        groupedContacts[section].1[row]
     }
     
     func getSectoinTittle(section: Int) -> String {
-        String(allContacts[section].0)
+        String(groupedContacts[section].0)
     }
     
     func contactForNumber(number: String) -> Contact? {
-        for section in allContacts {
-            for contact in section.1 {
-                if contact.number!.contains(where: { $0.1 == number }) {
-                    return contact
-                }
+        for contact in allContacts {
+            if let numbers = contact.noAttributesItems.phone, numbers.contains(where: { $0.value == number }) {
+                return contact
             }
         }
         return nil
@@ -52,20 +70,11 @@ class ContactStore {
         fetchRequest.sortDescriptors = [sortByDateTaken]
         
         let viewContext = persistentContainer.viewContext
-        viewContext.perform {
+        viewContext.performAndWait {
             
             do {
-                let contacts = try viewContext.fetch(fetchRequest)
-                for contact in contacts {
-                    let first = contact.firstName!.first!
-                    self.parseJSON(contact)
-                    
-                    if let index = self.allContacts.firstIndex(where: { $0.0 == first }) {
-                        self.allContacts[index].1.append(contact)
-                    } else {
-                        self.allContacts.append((first,[contact]))
-                    }
-                }
+                allContacts = try viewContext.fetch(fetchRequest)
+                
             } catch {
                 print("Error loading contacts:",error)
             }
@@ -84,14 +93,7 @@ class ContactStore {
     }
     
     func addNewContact(contact: Contact) {
-        let first = contact.firstName?.first ?? contact.lastName!.first!
-        if let section = allContacts.firstIndex(where: { $0.0 == first }) {
-            allContacts[section].1.append(contact)
-            allContacts[section].1.sort(by: {$0.firstName! < $1.firstName!})
-        } else {
-            allContacts.append((first,[contact]))
-            allContacts.sort(by: {$0.0 < $1.0})
-        }
+        allContacts.append(contact)
         
         do {
             try persistentContainer.viewContext.save()
@@ -101,12 +103,7 @@ class ContactStore {
     }
     
     func deleteContact(contact: Contact) {
-        let first = contact.firstName?.first ?? contact.lastName!.first!
-        let section = allContacts.firstIndex(where: { $0.0 == first })!
-        allContacts[section].1.removeAll(where: {$0 == contact})
-        if allContacts[section].1.isEmpty {
-            allContacts.remove(at: section)
-        }
+        allContacts.removeAll(where: { $0 == contact })
         
         let context = persistentContainer.viewContext
         context.delete(contact)
@@ -125,10 +122,10 @@ class ContactStore {
         guard let data = contact.json?.data(using: .utf8) else { return }
         
         do {
-            let jsonDictionary = try JSONSerialization.jsonObject(with: data, options : .allowFragments) as! [String:[String:[String]]]
-
-            contact.jsonDictionary = jsonDictionary
-            setAllAttributes(contact)
+            let jsonDecoder = JSONDecoder()
+            contact.noAttributesItems = try jsonDecoder.decode(ContactNoAttributesItems.self, from: data)
+            
+            //setAllAttributes(contact,noAttributesItems)
             
         } catch let error as NSError {
             print(error)
@@ -136,37 +133,11 @@ class ContactStore {
         
     }
     
-    private func setAttribute(_ dictionary: [String:[String:[String]]],_ name: String) -> [(String,String)]? {
-        if let dict = dictionary[name] {
-            return dict.map { ($0.key,$0.value.first!) }
-        }
-        return nil
-    }
-    
-    private func setAddress(_ dictionary: [String:[String:[String]]]) -> [(String,[String])]?  {
-        if let dict = dictionary["Address"] {
-            return dict.map { ($0.key,$0.value) }
-        }
-        return nil
-    }
-    
-    func setAllAttributes(_ contact: Contact) {
-        contact.number = setAttribute(contact.jsonDictionary, "Phone")
-        contact.email = setAttribute(contact.jsonDictionary, "Email")
-        contact.url = setAttribute(contact.jsonDictionary, "URL")
-        contact.address = setAddress(contact.jsonDictionary)
-        contact.birthday = setAttribute(contact.jsonDictionary, "Birthday")
-        contact.date = setAttribute(contact.jsonDictionary, "Date")
-        contact.relatedName = setAttribute(contact.jsonDictionary, "Related Name")
-        contact.instantMessage = setAttribute(contact.jsonDictionary, "Message")
-        contact.socialProfile = setAttribute(contact.jsonDictionary, "Social Profile")
-    }
-    
-    func parseToJSON(_ contact: Contact,_ dict: [String:[String:[String]]]) {
-        guard !dict.isEmpty else { return }
-        
+    func parseToJSON(_ contact: Contact) {
         do {
-            let jsonData = try JSONSerialization.data(withJSONObject: dict, options: .prettyPrinted)
+            let jsonEncoder = JSONEncoder()
+            jsonEncoder.outputFormatting = .prettyPrinted
+            let jsonData = try JSONEncoder().encode(contact.noAttributesItems)
             contact.json = String(data: jsonData, encoding: .utf8)
         } catch {
             print("Error parsing dict to data",error)
@@ -177,5 +148,24 @@ class ContactStore {
         } catch {
             print("Core Data save failed: \(error).")
         }
+    }
+    
+    func updateFavourites() {
+        var favContacts = [(Contact,String,Date)]()
+        for contact in allContacts {
+            if let numbers = contact.noAttributesItems.phone {
+                for number in numbers where number.isFavourite! {
+                    favContacts.append((contact,number.favouriteType!,number.favouriteDate!))
+                }
+            }
+            if let emails = contact.noAttributesItems.email {
+                for email in emails where email.isFavourite! {
+                    favContacts.append((contact,email.favouriteType!,email.favouriteDate!))
+                }
+            }
+        }
+        favouriteContacts = favContacts.sorted(by: { pair1, pair2 in
+            pair1.2 < pair2.2
+        }).map { ($0.0,$0.1) }
     }
 }
