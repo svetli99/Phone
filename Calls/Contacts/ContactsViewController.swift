@@ -11,20 +11,38 @@ class ContactsViewController: UITableViewController, UISearchResultsUpdating {
     var contactStore = ContactStore.shared
     var searchController: UISearchController!
     
+    var isFromFavourite = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tableView.rowHeight = 40
         navigationController?.navigationBar.prefersLargeTitles = true
+        if isFromFavourite {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelFavourite))
+            navigationItem.prompt = "Choose a contact to add to Favourites"
+        } else {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addContact))
+        }
+        
         searchController = UISearchController()
         navigationItem.searchController = searchController
         searchController.searchResultsUpdater = self
         navigationItem.hidesSearchBarWhenScrolling = false
     }
     
-    override func viewDidAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         tableView.reloadData()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if let tabBar = presentingViewController as? UITabBarController,
+           let navVC = tabBar.selectedViewController as? UINavigationController,
+           let favouritesVC = navVC.topViewController as? FavouritesViewController {
+            favouritesVC.viewWillAppear(true)
+        }
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -46,6 +64,19 @@ class ContactsViewController: UITableViewController, UISearchResultsUpdating {
         return cell
     }
     
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        //presentationController?.presentationStyle
+        if isFromFavourite {
+            let alertStoryboard = UIStoryboard(name: "AlertStoryboard", bundle: nil)
+            let alertController = alertStoryboard.instantiateViewController(withIdentifier: "MyAlert") as! AlertViewController
+            alertController.contact = contactStore.getContact(section: indexPath.section, row: indexPath.row)
+            alertController.modalPresentationStyle = .overFullScreen
+            present(alertController, animated: true, completion: nil)
+        } else {
+            performSegue(withIdentifier: "ContactInfo", sender: indexPath)
+        }
+    }
+    
     func updateSearchResults(for searchController: UISearchController) {
         //searchController.textInputContextIdentifier
     }
@@ -63,18 +94,18 @@ class ContactsViewController: UITableViewController, UISearchResultsUpdating {
             let editContactViewController = navVC.topViewController as! EditContactViewController
             editContactViewController.isNew = true
             editContactViewController.contact = contactStore.createContact()
+            
         default:
             preconditionFailure("Unexpected segue identifier.")
         }
     }
-/*
-     if segue.identifier == "CallViewController" {
-         if let indexPath = tableView.indexPathForSelectedRow {
-             let callViewController = segue.destination as! CallViewController
-             let conatct = contactStore.getContact(section: indexPath.section, row: indexPath.row)
-             callViewController.name = conatct.name
-         }
-         
-     */
-}
+    
+    @objc func addContact() {
+        performSegue(withIdentifier: "NewContact", sender: nil)
+    }
+    
+    @objc func cancelFavourite() {
+        dismiss(animated: true)
+    }
 
+}

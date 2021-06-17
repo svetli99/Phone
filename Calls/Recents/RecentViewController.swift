@@ -9,6 +9,7 @@ import UIKit
 
 class RecentViewController: UITableViewController {
     var callStore = CallStore.shared
+    var contactStore = ContactStore.shared
     
     var segmentedControl = UISegmentedControl()
     
@@ -47,8 +48,8 @@ class RecentViewController: UITableViewController {
         segmentedControl.translatesAutoresizingMaskIntoConstraints = false
         navigationItem.titleView = segmentedControl
         navigationController?.navigationBar.prefersLargeTitles = true
-        navigationController?.navigationBar.backgroundColor = tableView.backgroundColor
-        navigationController?.navigationBar.shadowImage = UIImage()
+       // navigationController?.navigationBar.backgroundColor = tableView.backgroundColor
+        //navigationController?.navigationBar.shadowImage = UIImage()
         navigationItem.leftBarButtonItem?.isEnabled = false
         navigationItem.leftBarButtonItem?.title = ""
         navigationItem.rightBarButtonItem = editButtonItem
@@ -66,10 +67,10 @@ class RecentViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) ->         UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CallCell", for: indexPath) as! CallCell
         let call = callStore.getCall(segmentedIndex: segmentedControl.selectedSegmentIndex, row: indexPath.row)
-        cell.nameLabel.text = call.name
+        cell.nameLabel.text = call.name! + (call.inSeriesCount > 1 ? "(\(call.inSeriesCount))" : "")
         cell.nameLabel.textColor = call.isMissed ? .red : .black
-        cell.phoneTypeLabel.text = call.phoneType
-        cell.dateLabel.text = dateFormatting(call.date)
+        cell.phoneTypeLabel.text = call.type
+        cell.dateLabel.text = dateFormatting(call.date!.last!)
         cell.icon.isHidden = !call.isOutcome
         
         return cell
@@ -77,9 +78,13 @@ class RecentViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            callStore.deleteCall(segmentedIndex: segmentedControl.selectedSegmentIndex, row: indexPath.row)
+            callStore.deleteCall(segmentedIndex: segmentedControl.selectedSegmentIndex, index: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .automatic)
         }
+    }
+    
+    override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
+        performSegue(withIdentifier: "Info", sender: indexPath)
     }
     
     override func setEditing(_ editing: Bool, animated: Bool) {
@@ -127,14 +132,24 @@ class RecentViewController: UITableViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "CallViewController" {
+        switch segue.identifier {
+        case "CallViewController" :
             if let row = tableView.indexPathForSelectedRow?.row {
                 let callViewController = segue.destination as! CallViewController
                 let call = callStore.getCall(segmentedIndex: segmentedControl.selectedSegmentIndex, row: row)
                 callViewController.name = call.name
+                callViewController.type = call.type
+                callViewController.number = call.number
             }
-            
-        } else {
+            case "Info":
+                if let indexPath = sender as? IndexPath {
+                    let contactInfoViewController = segue.destination as! ContactInfoViewController
+                    let call = callStore.getCall(segmentedIndex: segmentedControl.selectedSegmentIndex, row: indexPath.row)
+                    let conatct = contactStore.getContact(for: call.number! )
+                    contactInfoViewController.contact = conatct
+                    contactInfoViewController.call = call
+                }
+        default:
             preconditionFailure("Unexpected segue identifier.")
         }
     }

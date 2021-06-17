@@ -10,8 +10,14 @@ class AlertViewController: UIViewController, UITableViewDelegate, UITableViewDat
     var numbers: [ContactInfoItem]!
     var emails: [ContactInfoItem]!
     
-    var wayPressed = ""
-    var rowOfWayPressed = 0
+    
+    var labels = [(type: String, value: String)]()
+    var basicIdentifiers = [String]()
+    var cellIdentifiers = [String]() {
+        didSet {
+            tableView.reloadData()
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,38 +28,42 @@ class AlertViewController: UIViewController, UITableViewDelegate, UITableViewDat
         
         numbers = contact.noAttributesItems.phone
         emails = contact.noAttributesItems.email
+        
         if numbers != nil {
-            cellIdentifires.append(contentsOf: ["Call","Message","Video"])
+            basicIdentifiers.append(contentsOf: ["Call","Message","Video"])
         }
         if emails != nil {
-            cellIdentifires.append("Mail")
+            basicIdentifiers.append("Mail")
         }
+        cellIdentifiers = basicIdentifiers
         
-        viewHeghtContraint.constant = CGFloat(cellIdentifires.count) * rowHeight + 60
+        viewHeghtContraint.constant = CGFloat(cellIdentifiers.count) * rowHeight + 60
     }
     
-    var labels = [(type: String, value: String)]()
-    var cellIdentifires = [String]() {
-        didSet {
-            tableView.reloadData()
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if let tabBar = presentingViewController as? UITabBarController,
+           let navVC = tabBar.selectedViewController as? UINavigationController,
+           let contactInfoVC = navVC.topViewController as? ContactInfoViewController {
+            contactInfoVC.viewWillAppear(true)
         }
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return cellIdentifires.count
+        return cellIdentifiers.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifires[indexPath.row], for: indexPath)
+        var cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifiers[indexPath.row], for: indexPath)
         switch cell {
         case let custom as WayCell:
-            custom.label.text = cellIdentifires[indexPath.row]
+            custom.label.text = cellIdentifiers[indexPath.row]
             let width = indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 ? cell.bounds.size.width : 15
             custom.separatorInset = UIEdgeInsets(top: 0, left: width, bottom: 0, right: 0)
             cell = custom
         case let custom as TypeCell:
-            custom.type.text = labels[indexPath.row - rowOfWayPressed - 1].type
-            custom.number.text = labels[indexPath.row - rowOfWayPressed - 1].value
+            custom.type.text = labels[indexPath.row  - 1].type
+            custom.number.text = labels[indexPath.row  - 1].value
             let width = indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 ? cell.bounds.size.width : 15
             custom.separatorInset = UIEdgeInsets(top: 0, left: width, bottom: 0, right: 0)
             cell = custom
@@ -62,52 +72,47 @@ class AlertViewController: UIViewController, UITableViewDelegate, UITableViewDat
         }
         return cell
     }
-    
+    var isCellOpen = false
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath)
         if let custom = cell as? WayCell {
-            if custom.chevronDown.isHidden {
-                removeRows()
+            if isCellOpen {
+                cellIdentifiers = basicIdentifiers
+                self.viewHeghtContraint.constant = CGFloat(self.cellIdentifiers.count) * rowHeight + 40
                 UIView.animate(withDuration: 0.3, animations: {
-                    custom.chevronUp.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi))
-                    self.containerView.translatesAutoresizingMaskIntoConstraints = false
-                    self.viewHeghtContraint.constant = CGFloat(self.cellIdentifires.count) * rowHeight + 40
+                    //custom.chevronDown.transform = CGAffineTransform.identity
                     self.containerView.layoutIfNeeded()
-                }, completion: { _ in
-                    custom.chevronDown.isHidden.toggle()
-                    custom.chevronUp.isHidden.toggle()
                 })
-                rowOfWayPressed = 0
-                wayPressed = ""
+                UIView.animate(withDuration: 0.3, animations: {
+                    custom.chevronDown.transform = CGAffineTransform.identity
+                    //self.containerView.layoutIfNeeded()
+                })
             } else {
-                if wayPressed != "" {
-                    removeRows()
-                }
-                
-                rowOfWayPressed = indexPath.row
+                cellIdentifiers = [cellIdentifiers[indexPath.row]]
                 addRows(custom.label.text!)
+                self.viewHeghtContraint.constant = CGFloat(self.cellIdentifiers.count) * rowHeight + 40
                 
                 UIView.animate(withDuration: 0.3, animations: {
-                    custom.chevronDown.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi))
-                    self.containerView.translatesAutoresizingMaskIntoConstraints = false
-                    self.viewHeghtContraint.constant = CGFloat(self.cellIdentifires.count) * rowHeight + 40
+                    //custom.chevronDown.transform = CGAffineTransform(rotationAngle: .pi)
                     self.containerView.layoutIfNeeded()
-                }, completion: { _ in
-                    custom.chevronDown.isHidden.toggle()
-                    custom.chevronUp.isHidden.toggle()
                 })
-                wayPressed = custom.label.text!
+                UIView.animate(withDuration: 0.3, animations: {
+                    custom.chevronDown.transform = CGAffineTransform(rotationAngle: .pi)
+                    //self.containerView.layoutIfNeeded()
+                })
             }
+            isCellOpen.toggle()
         }
         if cell is TypeCell {
-            if wayPressed == "Mail" {
-                contact.noAttributesItems.email?[indexPath.row - rowOfWayPressed - 1].isFavourite?.toggle()
-                contact.noAttributesItems.email?[indexPath.row - rowOfWayPressed - 1].favouriteDate = Date()
-                contact.noAttributesItems.email?[indexPath.row - rowOfWayPressed - 1].favouriteType = wayPressed
+            let favType = cellIdentifiers.first
+            if favType == "Mail" {
+                contact.noAttributesItems.email?[indexPath.row  - 1].isFavourite?.toggle()
+                contact.noAttributesItems.email?[indexPath.row  - 1].favouriteDate = Date()
+                contact.noAttributesItems.email?[indexPath.row  - 1].favouriteType = favType
             } else {
-                contact.noAttributesItems.phone?[indexPath.row - rowOfWayPressed - 1].isFavourite?.toggle()
-                contact.noAttributesItems.phone?[indexPath.row - rowOfWayPressed - 1].favouriteDate = Date()
-                contact.noAttributesItems.phone?[indexPath.row - rowOfWayPressed - 1].favouriteType = wayPressed
+                contact.noAttributesItems.phone?[indexPath.row  - 1].isFavourite?.toggle()
+                contact.noAttributesItems.phone?[indexPath.row  - 1].favouriteDate = Date()
+                contact.noAttributesItems.phone?[indexPath.row  - 1].favouriteType = favType
             }
             store.parseToJSON(contact)
             store.updateFavourites()
@@ -121,19 +126,13 @@ class AlertViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     private func addRows(_ way: String) {
         labels = way == "Mail" ? emails.map { ($0.type,$0.value) } : numbers.map{ ($0.type,$0.value) }
-        cellIdentifires.insert(contentsOf: Array(repeating: "Type", count: labels.count), at: rowOfWayPressed + 1)
+        cellIdentifiers.append(contentsOf: Array(repeating: "Type", count: labels.count))
     }
-    
-    private func removeRows() {
-        cellIdentifires = cellIdentifires.filter { $0 != "Type" }
-    }
-    
 }
 
 class WayCell: UITableViewCell {
     @IBOutlet var label: UILabel!
     @IBOutlet var chevronDown: UIImageView!
-    @IBOutlet var chevronUp: UIImageView!
 }
 
 class TypeCell: UITableViewCell {

@@ -65,10 +65,6 @@
                                                             <rect key="frame" x="355.5" y="17" width="18.5" height="10.5"/>
                                                             <color key="tintColor" white="0.40445622086247085" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         </imageView>
-                                                        <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="chevron.up" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="lsN-pD-Lie">
-                                                            <rect key="frame" x="355.5" y="16.5" width="18.5" height="10.5"/>
-                                                            <color key="tintColor" white="0.4044562209" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Oiz-RG-ROx">
                                                             <rect key="frame" x="79.5" y="11.5" width="42" height="21"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -80,8 +76,6 @@
                                                         <constraint firstAttribute="trailingMargin" secondItem="uSq-Gl-zkX" secondAttribute="trailing" id="5o3-lw-N7A"/>
                                                         <constraint firstItem="uSq-Gl-zkX" firstAttribute="centerY" secondItem="rg4-KD-Mje" secondAttribute="centerY" id="9qa-nJ-gfo"/>
                                                         <constraint firstItem="8Ne-33-1VD" firstAttribute="centerY" secondItem="rg4-KD-Mje" secondAttribute="centerY" id="N8E-FT-Q3W"/>
-                                                        <constraint firstItem="lsN-pD-Lie" firstAttribute="trailing" secondItem="uSq-Gl-zkX" secondAttribute="trailing" id="Q4h-9b-JQb"/>
-                                                        <constraint firstItem="lsN-pD-Lie" firstAttribute="centerY" secondItem="rg4-KD-Mje" secondAttribute="centerY" id="TlX-2r-8qh"/>
                                                         <constraint firstItem="Oiz-RG-ROx" firstAttribute="centerY" secondItem="rg4-KD-Mje" secondAttribute="centerY" id="pHF-Bd-OuK"/>
                                                         <constraint firstItem="8Ne-33-1VD" firstAttribute="leading" secondItem="rg4-KD-Mje" secondAttribute="leadingMargin" constant="10" id="qna-2U-sa0"/>
                                                         <constraint firstItem="Oiz-RG-ROx" firstAttribute="leading" secondItem="8Ne-33-1VD" secondAttribute="trailing" constant="30" id="vIv-DG-iNG"/>
@@ -90,7 +84,6 @@
                                                 <color key="backgroundColor" white="0.94585882867132864" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <connections>
                                                     <outlet property="chevronDown" destination="uSq-Gl-zkX" id="y8f-3D-1C1"/>
-                                                    <outlet property="chevronUp" destination="lsN-pD-Lie" id="1Pj-bq-ams"/>
                                                     <outlet property="label" destination="Oiz-RG-ROx" id="8AU-UN-TM2"/>
                                                 </connections>
                                             </tableViewCell>
@@ -142,10 +135,6 @@
                                                             <rect key="frame" x="355.5" y="17" width="18.5" height="10.5"/>
                                                             <color key="tintColor" white="0.4044562209" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         </imageView>
-                                                        <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="chevron.up" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="lUT-mC-MVw">
-                                                            <rect key="frame" x="355.5" y="16.5" width="18.5" height="10.5"/>
-                                                            <color key="tintColor" white="0.4044562209" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h0a-GZ-QGQ">
                                                             <rect key="frame" x="82" y="11.5" width="42" height="21"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -157,9 +146,7 @@
                                                         <constraint firstItem="h0a-GZ-QGQ" firstAttribute="leading" secondItem="9Km-go-91j" secondAttribute="trailing" constant="30" id="1v0-Xn-2Zi"/>
                                                         <constraint firstItem="9Km-go-91j" firstAttribute="leading" secondItem="7mG-3t-Tjc" secondAttribute="leadingMargin" constant="10" id="8gO-fF-zZp"/>
                                                         <constraint firstItem="gbL-PU-NS5" firstAttribute="centerY" secondItem="7mG-3t-Tjc" secondAttribute="centerY" id="RXr-P4-a5g"/>
-                                                        <constraint firstItem="lUT-mC-MVw" firstAttribute="trailing" secondItem="gbL-PU-NS5" secondAttribute="trailing" id="VjH-fs-dnp"/>
                                                         <constraint firstItem="9Km-go-91j" firstAttribute="centerY" secondItem="7mG-3t-Tjc" secondAttribute="centerY" id="hKF-Vj-aXi"/>
-                                                        <constraint firstItem="lUT-mC-MVw" firstAttribute="centerY" secondItem="7mG-3t-Tjc" secondAttribute="centerY" id="hdx-ho-iAx"/>
                                                         <constraint firstAttribute="trailingMargin" secondItem="gbL-PU-NS5" secondAttribute="trailing" id="uah-vv-Ord"/>
                                                         <constraint firstItem="h0a-GZ-QGQ" firstAttribute="centerY" secondItem="7mG-3t-Tjc" secondAttribute="centerY" id="yaS-5p-j7V"/>
                                                     </constraints>
@@ -167,7 +154,6 @@
                                                 <color key="backgroundColor" white="0.94585882870000004" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <connections>
                                                     <outlet property="chevronDown" destination="gbL-PU-NS5" id="txq-wX-mwy"/>
-                                                    <outlet property="chevronUp" destination="lUT-mC-MVw" id="c57-Td-IAX"/>
                                                     <outlet property="label" destination="h0a-GZ-QGQ" id="5sy-BQ-D6J"/>
                                                 </connections>
                                             </tableViewCell>
@@ -186,10 +172,6 @@
                                                             <rect key="frame" x="355.5" y="17" width="18.5" height="10.5"/>
                                                             <color key="tintColor" white="0.4044562209" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         </imageView>
-                                                        <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="chevron.up" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="BWM-px-l3b">
-                                                            <rect key="frame" x="355.5" y="16.5" width="18.5" height="10.5"/>
-                                                            <color key="tintColor" white="0.4044562209" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Epj-Mp-I42">
                                                             <rect key="frame" x="84" y="11.5" width="42" height="21"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -200,8 +182,6 @@
                                                     <constraints>
                                                         <constraint firstItem="xnU-ds-Jwz" firstAttribute="centerY" secondItem="pSh-7f-U6I" secondAttribute="centerY" id="FEH-8E-TCz"/>
                                                         <constraint firstItem="Epj-Mp-I42" firstAttribute="centerY" secondItem="pSh-7f-U6I" secondAttribute="centerY" id="GKE-MQ-ozH"/>
-                                                        <constraint firstItem="BWM-px-l3b" firstAttribute="centerY" secondItem="pSh-7f-U6I" secondAttribute="centerY" id="J3q-98-qh4"/>
-                                                        <constraint firstItem="BWM-px-l3b" firstAttribute="trailing" secondItem="gJZ-O3-szz" secondAttribute="trailing" id="NXa-c9-U5k"/>
                                                         <constraint firstItem="gJZ-O3-szz" firstAttribute="centerY" secondItem="pSh-7f-U6I" secondAttribute="centerY" id="jaK-Fs-VJY"/>
                                                         <constraint firstItem="Epj-Mp-I42" firstAttribute="leading" secondItem="xnU-ds-Jwz" secondAttribute="trailing" constant="30" id="vLN-90-rvr"/>
                                                         <constraint firstAttribute="trailingMargin" secondItem="gJZ-O3-szz" secondAttribute="trailing" id="vkZ-Cw-rJ6"/>
@@ -211,7 +191,6 @@
                                                 <color key="backgroundColor" white="0.94585882870000004" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <connections>
                                                     <outlet property="chevronDown" destination="gJZ-O3-szz" id="9cf-1J-DXC"/>
-                                                    <outlet property="chevronUp" destination="BWM-px-l3b" id="92x-AG-yDg"/>
                                                     <outlet property="label" destination="Epj-Mp-I42" id="wbF-DD-wUl"/>
                                                 </connections>
                                             </tableViewCell>
@@ -230,10 +209,6 @@
                                                             <rect key="frame" x="355.5" y="17" width="18.5" height="10.5"/>
                                                             <color key="tintColor" white="0.4044562209" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         </imageView>
-                                                        <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="chevron.up" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="XvJ-Ml-6Uy">
-                                                            <rect key="frame" x="355.5" y="16.5" width="18.5" height="10.5"/>
-                                                            <color key="tintColor" white="0.4044562209" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yqk-fI-vtf">
                                                             <rect key="frame" x="82.5" y="11.5" width="42" height="21"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -245,17 +220,14 @@
                                                         <constraint firstItem="yqk-fI-vtf" firstAttribute="leading" secondItem="skm-xr-JAP" secondAttribute="trailing" constant="30" id="0ZB-f7-d41"/>
                                                         <constraint firstItem="AGV-Rq-A8J" firstAttribute="centerY" secondItem="rdI-LH-H9L" secondAttribute="centerY" id="CQv-0f-oAG"/>
                                                         <constraint firstAttribute="trailingMargin" secondItem="AGV-Rq-A8J" secondAttribute="trailing" id="Ldg-DZ-bbp"/>
-                                                        <constraint firstItem="XvJ-Ml-6Uy" firstAttribute="centerY" secondItem="rdI-LH-H9L" secondAttribute="centerY" id="VSH-Lu-PaV"/>
                                                         <constraint firstItem="skm-xr-JAP" firstAttribute="centerY" secondItem="rdI-LH-H9L" secondAttribute="centerY" id="dT5-JK-BQW"/>
                                                         <constraint firstItem="yqk-fI-vtf" firstAttribute="centerY" secondItem="rdI-LH-H9L" secondAttribute="centerY" id="gai-hb-QI2"/>
                                                         <constraint firstItem="skm-xr-JAP" firstAttribute="leading" secondItem="rdI-LH-H9L" secondAttribute="leadingMargin" constant="10" id="uBR-oK-y4V"/>
-                                                        <constraint firstItem="XvJ-Ml-6Uy" firstAttribute="trailing" secondItem="AGV-Rq-A8J" secondAttribute="trailing" id="vyZ-W9-iVc"/>
                                                     </constraints>
                                                 </tableViewCellContentView>
                                                 <color key="backgroundColor" white="0.94585882870000004" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <connections>
                                                     <outlet property="chevronDown" destination="AGV-Rq-A8J" id="qKu-Nw-Dk2"/>
-                                                    <outlet property="chevronUp" destination="XvJ-Ml-6Uy" id="Wjl-Vs-U9H"/>
                                                     <outlet property="label" destination="yqk-fI-vtf" id="jlh-lP-SvH"/>
                                                 </connections>
                                             </tableViewCell>
@@ -279,16 +251,28 @@
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="clipsToBounds" value="YES"/>
                                 </userDefinedRuntimeAttributes>
                             </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Saq-Iv-cWk">
+                                <rect key="frame" x="0.0" y="44" width="414" height="358"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="5hR-df-dqU" appends="YES" id="msc-NJ-pud"/>
+                                </connections>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="3Sd-nt-luV"/>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.098246173469387674" colorSpace="calibratedRGB"/>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="LTZ-S3-1Uf" firstAttribute="top" secondItem="sTW-Dm-Yei" secondAttribute="bottom" constant="10" id="6qC-0K-q0a"/>
+                            <constraint firstItem="Saq-Iv-cWk" firstAttribute="top" secondItem="3Sd-nt-luV" secondAttribute="top" id="CHj-nc-Yia"/>
                             <constraint firstItem="sTW-Dm-Yei" firstAttribute="leading" secondItem="bfb-Dl-mZg" secondAttribute="leading" constant="10" id="ITE-ER-mxz"/>
+                            <constraint firstItem="Saq-Iv-cWk" firstAttribute="leading" secondItem="3Sd-nt-luV" secondAttribute="leading" id="Ug1-qH-dbg"/>
                             <constraint firstItem="3Sd-nt-luV" firstAttribute="trailing" secondItem="LTZ-S3-1Uf" secondAttribute="trailing" constant="10" id="XrM-C3-Wv4"/>
                             <constraint firstItem="LTZ-S3-1Uf" firstAttribute="leading" secondItem="3Sd-nt-luV" secondAttribute="leading" constant="10" id="bjs-xM-slV"/>
                             <constraint firstItem="3Sd-nt-luV" firstAttribute="bottom" secondItem="LTZ-S3-1Uf" secondAttribute="bottom" id="c7N-ep-d68"/>
+                            <constraint firstItem="3Sd-nt-luV" firstAttribute="trailing" secondItem="Saq-Iv-cWk" secondAttribute="trailing" id="h4w-6R-Ngf"/>
+                            <constraint firstItem="sTW-Dm-Yei" firstAttribute="top" secondItem="Saq-Iv-cWk" secondAttribute="bottom" id="nlC-ms-UqT"/>
                             <constraint firstAttribute="trailing" secondItem="sTW-Dm-Yei" secondAttribute="trailing" constant="10" id="ySz-eo-VMp"/>
                         </constraints>
                     </view>
@@ -299,13 +283,17 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="r39-kH-3zV" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="5hR-df-dqU">
+                    <connections>
+                        <action selector="cancel" destination="Vf5-kh-BMR" id="MB6-9O-qRY"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="126.08695652173914" y="133.92857142857142"/>
         </scene>
     </scenes>
     <resources>
         <image name="chevron.down" catalog="system" width="128" height="72"/>
-        <image name="chevron.up" catalog="system" width="128" height="72"/>
         <image name="envelope.fill" catalog="system" width="128" height="93"/>
         <image name="message.fill" catalog="system" width="128" height="113"/>
         <image name="phone.fill" catalog="system" width="128" height="114"/>

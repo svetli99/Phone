@@ -16,6 +16,8 @@ class CallViewController: UIViewController {
     @IBOutlet var customKeypad: CustomKeypad!
     
     var name: String!
+    var type: String!
+    var number: String!
     var timer = Timer()
     var minutes = 0
     var seconds = 0
@@ -32,11 +34,6 @@ class CallViewController: UIViewController {
         hideButton.setTitle("", for: .normal)
         customKeypad.addTarget(self, action: #selector(buttonPressed), for: .valueChanged)
         customKeypad.style = .call
-//        customKeypad.buttons.forEach {
-//            $0.backgroundColor = $0.backgroundColor?.withAlphaComponent(0.1)
-//            $0.titleLabel.textColor = .white
-//            $0.subtitleLabel.textColor = .white
-//        }
         runTimer()
     }
     
@@ -52,10 +49,11 @@ class CallViewController: UIViewController {
     
     @IBAction func endCall(_ sender: UIButton) {
         let contactStore = ContactStore.shared
-        let contact = contactStore.contactForNumber(number: nameLabel.text!)
-        let name = contact?.firstName ?? nameLabel.text!
+        let contact = contactStore.getContact(for: nameLabel.text!)
+        let names = (contact?.firstName ?? "") + " " + (contact?.lastName ?? "")
+        let name = names == " " ? nameLabel.text! : names
         let callStore = CallStore.shared
-        callStore.createCall(name: name, phoneType: "mobile", date: Date(), isMissed: false, hasIcon: true)
+        callStore.createCall(name: name, number: number, phoneType: type, date: Date(), isMissed: false, isOutcome: true)
         self.dismiss(animated: false, completion: nil)
     }
     

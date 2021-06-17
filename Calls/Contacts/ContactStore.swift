@@ -24,7 +24,7 @@ class ContactStore {
     
     var groupedContacts = [(Character, [Contact])]() 
     
-    var favouriteContacts = [(Contact,String)]()
+    var favouriteContacts = [(Contact,ContactInfoItem)]()
     
     var tags = ["mobile","home","work","school","other"]
     
@@ -55,7 +55,7 @@ class ContactStore {
         String(groupedContacts[section].0)
     }
     
-    func contactForNumber(number: String) -> Contact? {
+    func getContact(for number: String) -> Contact? {
         for contact in allContacts {
             if let numbers = contact.noAttributesItems.phone, numbers.contains(where: { $0.value == number }) {
                 return contact
@@ -93,7 +93,11 @@ class ContactStore {
     }
     
     func addNewContact(contact: Contact) {
-        allContacts.append(contact)
+        if let index = allContacts.firstIndex(where: { ($0.firstName ?? $0.lastName!) > (contact.firstName ?? contact.lastName!) }) {
+            allContacts.insert(contact, at: index)
+        } else {
+            allContacts.append(contact)
+        }
         
         do {
             try persistentContainer.viewContext.save()
@@ -113,9 +117,6 @@ class ContactStore {
         } catch {
             print("Error saving delete contact: \(error)")
         }
-        
-        
-        
     }
 
     private func parseJSON(_ contact: Contact) {
@@ -151,21 +152,21 @@ class ContactStore {
     }
     
     func updateFavourites() {
-        var favContacts = [(Contact,String,Date)]()
+        var favContacts = [(Contact,ContactInfoItem)]()
         for contact in allContacts {
             if let numbers = contact.noAttributesItems.phone {
                 for number in numbers where number.isFavourite! {
-                    favContacts.append((contact,number.favouriteType!,number.favouriteDate!))
+                    favContacts.append((contact,number))
                 }
             }
             if let emails = contact.noAttributesItems.email {
                 for email in emails where email.isFavourite! {
-                    favContacts.append((contact,email.favouriteType!,email.favouriteDate!))
+                    favContacts.append((contact,email))
                 }
             }
         }
         favouriteContacts = favContacts.sorted(by: { pair1, pair2 in
-            pair1.2 < pair2.2
-        }).map { ($0.0,$0.1) }
+            pair1.1.favouriteDate! < pair2.1.favouriteDate!
+        })
     }
 }

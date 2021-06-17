@@ -12,9 +12,32 @@ class ContactCell: UITableViewCell {
 }
 
 // MARK: Info
+class CallInfoCell: UITableViewCell {
+    @IBOutlet var day: UILabel!
+    @IBOutlet var stackView: UIStackView!
+    
+    func addCall(time: String, type: String) {
+        let newView = CallInfoView.fromNib()
+        newView.time.text = time
+        newView.type.text = type
+        stackView.addArrangedSubview(newView)
+    }
+}
+
+class CallInfoView: UIView {
+    @IBOutlet var time: UILabel!
+    @IBOutlet var type: UILabel!
+    
+    class func fromNib() -> Self {
+        return Bundle(for: Self.self).loadNibNamed(String(describing: Self.self), owner: nil, options: nil)![0] as! Self
+    }
+}
+
 class InfoCell: UITableViewCell {
     @IBOutlet var type: UILabel!
     @IBOutlet var number: UILabel!
+    @IBOutlet var isFavourite: UIImageView!
+    @IBOutlet var recent: UIView!
 }
 
 class ButtonCell: UITableViewCell {

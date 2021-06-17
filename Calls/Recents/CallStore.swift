@@ -1,34 +1,6 @@
-//
-//  CallStore.swift
-//  Calls
-//
-//  Created by Svetlio on 16.04.21.
-//
 
 import UIKit
-
-class Call: Codable {
-    var name: String
-    var phoneType: String
-    var date: Date
-    var isMissed: Bool
-    var isOutcome: Bool
-    var inSeriesCount: Int = 1 {
-        didSet {
-            if inSeriesCount > 1 {
-                name += " (\(inSeriesCount))"
-            }
-        }
-    }
-    
-    init(name: String, phoneType: String, date: Date, isMissed: Bool, hasIcon: Bool) {
-        self.name = name
-        self.phoneType = phoneType
-        self.date = date
-        self.isMissed = isMissed
-        self.isOutcome = hasIcon
-    }
-}
+import CoreData
 
 class CallStore {
     static var shared = CallStore()
@@ -40,11 +12,14 @@ class CallStore {
     }
     var missedCalls = [Call]()
     
-    let callArchiveURL: URL = {
-        let documentsDirectories = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-        let documentDirectory = documentsDirectories.first!
-        
-        return documentDirectory.appendingPathComponent("calls.json")
+    let persistentContainer: NSPersistentContainer = {
+        let container = NSPersistentContainer(name: "Contacts")
+        container.loadPersistentStores { (description, error) in
+            if let error = error {
+                print("Error setting up Core Data (\(error)).")
+            }
+        }
+        return container
     }()
     
     let dateFormatter: DateFormatter = {
@@ -55,28 +30,76 @@ class CallStore {
     }()
     
     private init() {
-        let notificationCenter = NotificationCenter.default
-            notificationCenter.addObserver(self, selector: #selector(saveChanges), name: UIScene.didEnterBackgroundNotification, object: nil)
-        do {
-            let jsonData = try Data(contentsOf: callArchiveURL)
-            let jsonDecoder = JSONDecoder()
-            jsonDecoder.dateDecodingStrategy = .formatted(dateFormatter)
-            allCalls = try jsonDecoder.decode([Call].self, from: jsonData)
-            missedCalls = allCalls.filter { $0.isMissed }
-        } catch {
-            print("Error decoding allCalls: \(error)")
-        }
-
+        loadCalls()
     }
     
-    @discardableResult func createCall(name: String, phoneType: String, date: Date, isMissed: Bool, hasIcon: Bool) -> Call {
-        let newCall = Call(name: name, phoneType: phoneType, date: date, isMissed: isMissed, hasIcon: hasIcon)
-        if let lastCall = allCalls.last, lastCall.name == newCall.name && lastCall.isMissed == newCall.isMissed{
-            lastCall.inSeriesCount += 1
-        } else{
+    func loadCalls() {
+        let fetchRequest: NSFetchRequest<Call> = Call.fetchRequest()
+        let sortByDateTaken = NSSortDescriptor(key: #keyPath(Call.date),ascending: false)
+        fetchRequest.sortDescriptors = [sortByDateTaken]
+        
+        let viewContext = persistentContainer.viewContext
+        viewContext.performAndWait {
+            
+            do {
+                allCalls = try viewContext.fetch(fetchRequest)
+                
+            } catch {
+                print("Error loading calls:",error)
+            }
+            
+        }
+    }
+    
+    func createCall(name: String,number: String, phoneType: String, date: Date, isMissed: Bool, isOutcome: Bool) {
+        if allCalls.first?.name == name, allCalls.first?.isMissed == isMissed, allCalls.first?.type == phoneType,allCalls.first?.number == number {
+            allCalls[0].inSeriesCount += 1
+            allCalls[0].date?.append(date)
+        } else {
+            let viewContext = persistentContainer.viewContext
+            var newCall: Call!
+            viewContext.performAndWait {
+                newCall = Call(context: viewContext)
+                newCall.name = name
+                newCall.number = number
+                newCall.date = [date]
+                newCall.type = phoneType
+                newCall.isMissed = isMissed
+                newCall.isOutcome = isOutcome
+                newCall.inSeriesCount = 1
+            }
             allCalls.insert(newCall, at: 0)
         }
-        return newCall
+        
+        do {
+            try persistentContainer.viewContext.save()
+        } catch {
+            print("Core Data save failed: \(error).")
+        }
+    }
+    
+    func deleteCall(segmentedIndex: Int,index: Int) {
+        var index = index
+        if segmentedIndex == 1 {
+            var c = index
+            for i in allCalls.indices where allCalls[i].isMissed {
+                if c == 0 {
+                    index = i
+                    break
+                }
+                c -= 1
+            }
+        }
+        let call = allCalls.remove(at: index)
+        
+        let context = persistentContainer.viewContext
+        context.delete(call)
+        
+        do {
+            try persistentContainer.viewContext.save()
+        } catch {
+            print("Error saving delete contact: \(error)")
+        }
     }
     
     func getCall(segmentedIndex: Int, row: Int) -> Call {
@@ -85,48 +108,5 @@ class CallStore {
     
     func getNumberOfRows(segmentedIndex: Int) -> Int {
         return segmentedIndex == 0 ? allCalls.count : missedCalls.count
-    }
-    
-    func loadCalls() {
-        let name = "Refik"
-        let phoneType = "mobile"
-        let date = Date()
-        var isMissed = false
-        var hasIcon = true
-        
-        for _ in 1...15 {
-           createCall(name: name, phoneType: phoneType, date: date, isMissed: isMissed, hasIcon: hasIcon)
-            isMissed.toggle()
-            hasIcon.toggle()
-        }
-    }
-    
-    func deleteCall(segmentedIndex: Int, row: Int) {
-        var row = row
-        if segmentedIndex == 1 {
-            var c = row
-            for i in allCalls.indices where allCalls[i].isMissed {
-                
-                if c == 0 {
-                    row = i
-                    break
-                }
-                c -= 1
-            }
-        }
-        allCalls.remove(at: row)
-    }
-    
-    @objc func saveChanges() throws {
-        print("Saving items to: \(callArchiveURL)")
-        
-        do {
-            let encoder = JSONEncoder()
-            encoder.dateEncodingStrategy = .formatted(dateFormatter)
-            let data = try encoder.encode(allCalls)
-            try data.write(to: callArchiveURL, options: [.atomic])
-        } catch let encodingError {
-            throw encodingError
-        }
     }
 }

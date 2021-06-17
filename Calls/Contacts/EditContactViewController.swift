@@ -78,9 +78,7 @@ class EditContactViewController: UITableViewController {
         if let tabBar = presentingViewController as? UITabBarController,
            let navVC = tabBar.selectedViewController as? UINavigationController,
            let contactsVC = navVC.topViewController as? ContactsViewController {
-            DispatchQueue.main.async {
-                contactsVC.tableView.reloadData()
-            }
+            contactsVC.viewWillAppear(true)
         }
     }
     
@@ -259,13 +257,13 @@ class EditContactViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-           switch indexPath.section {
-           case 0, 3, 4, 12, 13, 15:
-               return false
-           default:
-               return true
-           }
-       }
+        switch indexPath.section {
+        case 0, 3, 4, 12, 13, 15:
+            return false
+        default:
+            return true
+        }
+    }
     
     @IBAction func cancel(_ sender: UIBarButtonItem) {
         let title = "Are you shure you want to discard " + (isNew ? "this new contact?" : "your changes?")
