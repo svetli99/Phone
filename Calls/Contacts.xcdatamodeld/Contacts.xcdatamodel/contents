@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17709" systemVersion="20F71" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Call" representedClassName="Call" syncable="YES">
-        <attribute name="date" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData" customClassName="[Date]"/>
-        <attribute name="inSeriesCount" optional="YES" attributeType="Integer 16" defaultValueString="1" usesScalarValueType="YES"/>
-        <attribute name="isMissed" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
-        <attribute name="isOutcome" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="callTime" attributeType="String" valueTransformerName="NSSecureUnarchiveFromData" customClassName="[String]"/>
+        <attribute name="callType" optional="YES" attributeType="String" valueTransformerName="NSSecureUnarchiveFromData" customClassName="[String]"/>
+        <attribute name="date" attributeType="Date" valueTransformerName="NSSecureUnarchiveFromData" usesScalarValueType="NO" customClassName="[Date]"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="number" optional="YES" attributeType="String"/>
-        <attribute name="type" optional="YES" attributeType="String"/>
+        <attribute name="phoneType" optional="YES" attributeType="String"/>
     </entity>
     <entity name="Contact" representedClassName="Contact" syncable="YES">
         <attribute name="company" optional="YES" attributeType="String"/>
@@ -17,7 +16,7 @@
         <attribute name="notes" optional="YES" attributeType="String"/>
     </entity>
     <elements>
+        <element name="Call" positionX="-63" positionY="27" width="128" height="119"/>
         <element name="Contact" positionX="-63" positionY="-9" width="128" height="104"/>
-        <element name="Call" positionX="-63" positionY="27" width="128" height="134"/>
     </elements>
 </model>

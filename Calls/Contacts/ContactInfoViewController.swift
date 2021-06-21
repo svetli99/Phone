@@ -1,13 +1,13 @@
 import UIKit
 
-class ContactInfoViewController: UITableViewController {
+class ContactInfoViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     let store = ContactStore.shared
     let fixedLabels = [
         [[""]],
         [["Send Message"],["Share Contact"],["Add to Fovourites"]],
         [["Add to Emergency Contacts"]],
         [["Share My Location"]],
-        [["Block this Caller"]]
+        [["Block this Caller"],[],[]]
     ]
     
     let fixedIdentifires = [
@@ -15,7 +15,7 @@ class ContactInfoViewController: UITableViewController {
         ["Cell","Cell","Cell"],
         ["Cell"],
         ["Cell"],
-        ["Block"]
+        ["Block","Incoming","Missed"]
     ]
     
     var labelTitles = [[[String]]]()
@@ -24,17 +24,18 @@ class ContactInfoViewController: UITableViewController {
     
     @IBOutlet var nameLabel: UILabel!
     @IBOutlet var IDLabel: UILabel!
+    @IBOutlet var tableView: UITableView!
     
     var contact: Contact! 
     
     var name: String! {
         didSet {
-            nameLabel.text = name
-            IDLabel.text = String(name.first ?? "a").capitalized
+            //nameLabel.text = name
+            //IDLabel.text = String(name.first ?? "a").capitalized
         }
     }
     
-    var call: Call? {
+    var call: [Call]? {
         didSet {
             if call != nil {
                 recentDif = 1
@@ -67,11 +68,32 @@ class ContactInfoViewController: UITableViewController {
     
     var notes: String!
     
+    @IBOutlet var emailButton: UIButton!
+    @IBOutlet var videoButton: UIButton!
+    @IBOutlet var callButton: UIButton!
+    @IBOutlet var messageButton: UIButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationController?.navigationBar.prefersLargeTitles = true
+        configureMenus()
+        
+        tableView.delegate = self
+        tableView.dataSource = self
+        setTitleView()
+        //let profileView = ProfileView.fromNib()
+        //navigationItem.titleView = profileView
+        //navigationItem.titleView?.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        //navigationItem.titleView?.heightAnchor.constraint(equalToConstant: 150).isActive = true
+        
+        navigationController?.navigationBar.barTintColor = UIColor(red: 244 / 256, green: 243 / 256, blue: 248 / 256, alpha: 1)
+        navigationController?.navigationBar.shadowImage = UIImage()
+        
     }
+    
+//    override func viewDidAppear(_ animated: Bool) {
+//        super.viewDidAppear(animated)
+//    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -83,7 +105,7 @@ class ContactInfoViewController: UITableViewController {
             cellIdentifires.insert(["Call"], at: 0)
         }
         
-        name = (contact.firstName ?? "") + " " + (contact.lastName ?? "")
+        name = (contact.firstName ?? "") + (contact.lastName == nil ? "" : " \(contact!.lastName!)")
         notes = contact.notes
         
         var section = 0 + recentDif
@@ -99,32 +121,32 @@ class ContactInfoViewController: UITableViewController {
         tableView.reloadData()
     }
     
-    override func numberOfSections(in tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         labelTitles.count
     }
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         cellIdentifires[section].count
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifires[indexPath.section][indexPath.row], for: indexPath)
         switch cell {
         case let custom as CallInfoCell:
-            configureLastCallCell(call!.date!.last!, custom)
-            call?.date?.forEach { date in
-                let time = dateFormatterHours.string(from: date)
-                let type = (call!.isMissed ? "Missed " : "Outgoing ") + "Call"
-                custom.addCall(time: time, type: type)
+            configureLastCallCell(call!.last!.date!, custom)
+            for c in call! {
+                let time = dateFormatterHours.string(from: c.date!)
+                let type = c.callType! + " Call"
+                let duration = c.callTime!
+                custom.addCall(time: time, type: type, duration: duration)
             }
-//            custom.type.text = (call!.isMissed ? "Missed " : "Outgoing ") + "Call"
-//            custom.addCall()
+            
             cell = custom
         case let custom as InfoCell:
             custom.type.text = labelTitles[indexPath.section][indexPath.row].first
             custom.number.text = labelTitles[indexPath.section][indexPath.row][1]
-            if let call = call, custom.number.text == call.number {
-                if call.isMissed {
+            if let call = call?.first, custom.number.text == call.number {
+                if call.callType == "Missed" {
                     custom.number.textColor = .red
                 }
                 custom.recent.isHidden = false
@@ -149,7 +171,7 @@ class ContactInfoViewController: UITableViewController {
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath)
         if let cell = cell as? InfoCell, indexPath.section == 0 + recentDif {
             let callViewController = storyboard?.instantiateViewController(identifier: "Dial") as! CallViewController
@@ -158,12 +180,17 @@ class ContactInfoViewController: UITableViewController {
             callViewController.number = cell.number.text
             callViewController.modalPresentationStyle = .fullScreen
             present(callViewController, animated: true, completion: nil)
-        } else if cell is ButtonCell, indexPath.row == 2 {
+        } else if labelTitles[indexPath.section][indexPath.row] == ["Add to Fovourites"] {
             let alertStoryboard = UIStoryboard(name: "AlertStoryboard", bundle: nil)
             let alertController = alertStoryboard.instantiateViewController(withIdentifier: "MyAlert") as! AlertViewController
             alertController.contact = contact
             alertController.modalPresentationStyle = .overFullScreen
             present(alertController, animated: true, completion: nil)
+        } else if cellIdentifires[indexPath.section][indexPath.row] == "Incoming" {
+            let callTime = "\(Int.random(in: 1...60)) seconds"
+            CallStore.shared.createCall(name: contact.firstName ?? contact.lastName!, number: contact.noAttributesItems.phone!.first!.value, phoneType: contact.noAttributesItems.phone!.first!.type, date: Date(), callType: "Incoming", callTime: callTime)
+        } else if cellIdentifires[indexPath.section][indexPath.row] == "Missed" {
+            CallStore.shared.createCall(name: contact.firstName ?? contact.lastName!, number: contact.noAttributesItems.phone!.first!.value, phoneType: contact.noAttributesItems.phone!.first!.type, date: Date(), callType: "Missed", callTime: "0")
         }
         tableView.deselectRow(at: indexPath, animated: true)
     }
@@ -222,5 +249,73 @@ class ContactInfoViewController: UITableViewController {
         } else {
             cell.day.text = dateFormatterDate.string(from: date)
         }
+    }
+    
+    func configureMenus() {
+        var callActions = [UIAction]()
+        var messageActions = [UIAction]()
+        var videoActions = [UIAction]()
+        var emailActions = [UIAction]()
+        
+        contact.noAttributesItems.phone?.forEach { phone in
+            let callAction = UIAction(title: phone.type, image: UIImage(systemName: "phone"),handler: { a in
+                print(phone.value)
+            })
+            callAction.discoverabilityTitle = phone.value
+            callActions.append(callAction)
+            
+            let messageAction = UIAction(title: phone.type, image: UIImage(systemName: "message"),handler: { a in
+                print(phone.value)
+            })
+            messageAction.discoverabilityTitle = phone.value
+            messageActions.append(messageAction)
+            
+            let videoAction = UIAction(title: phone.type, image: UIImage(systemName: "video"),handler: { a in
+                print(phone.value)
+            })
+            videoAction.discoverabilityTitle = phone.value
+            videoActions.append(videoAction)
+        }
+        
+        contact.noAttributesItems.email?.forEach { email in
+            let emailAction = UIAction(title: email.type, image: UIImage(systemName: "envelope"),handler: { a in
+                print(email.value)
+            })
+            emailAction.discoverabilityTitle = email.value
+            emailActions.append(emailAction)
+        }
+        
+        
+        let callMenu = UIMenu(title: "", children: callActions)
+        let messageMenu = UIMenu(title: "", children: messageActions)
+        let videoMenu = UIMenu(title: "", children: videoActions)
+        let emailMenu = UIMenu(title: "", children: emailActions)
+        
+        callButton.showsMenuAsPrimaryAction = true
+        callButton.menu = callMenu
+        
+        messageButton.showsMenuAsPrimaryAction = true
+        messageButton.menu = messageMenu
+        
+        videoButton.showsMenuAsPrimaryAction = true
+        videoButton.menu = videoMenu
+        
+        emailButton.showsMenuAsPrimaryAction = true
+        emailButton.menu = emailMenu
+    }
+    
+    func setTitleView() {
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 150))
+        let profileView = ProfileView.fromNib()
+        profileView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(profileView)
+        NSLayoutConstraint.activate([
+            profileView.topAnchor.constraint(equalTo: view.topAnchor),
+            profileView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            profileView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            profileView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ])
+        
+        navigationItem.titleView = view
     }
 }

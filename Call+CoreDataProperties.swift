@@ -2,7 +2,7 @@
 //  Call+CoreDataProperties.swift
 //  Calls
 //
-//  Created by Svetoslav Kanchev on 17.06.21.
+//  Created by Svetoslav Kanchev on 21.06.21.
 //
 //
 
@@ -16,13 +16,12 @@ extension Call {
         return NSFetchRequest<Call>(entityName: "Call")
     }
 
+    @NSManaged public var callTime: String?
+    @NSManaged public var callType: String?
+    @NSManaged public var date: Date?
     @NSManaged public var name: String?
-    @NSManaged public var type: String?
-    @NSManaged public var date: [Date]?
-    @NSManaged public var inSeriesCount: Int16
-    @NSManaged public var isOutcome: Bool
-    @NSManaged public var isMissed: Bool
     @NSManaged public var number: String?
+    @NSManaged public var phoneType: String?
 
 }
 

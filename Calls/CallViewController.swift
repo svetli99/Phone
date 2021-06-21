@@ -50,10 +50,12 @@ class CallViewController: UIViewController {
     @IBAction func endCall(_ sender: UIButton) {
         let contactStore = ContactStore.shared
         let contact = contactStore.getContact(for: nameLabel.text!)
-        let names = (contact?.firstName ?? "") + " " + (contact?.lastName ?? "")
-        let name = names == " " ? nameLabel.text! : names
+        let names = (contact?.firstName ?? "") + (contact?.lastName == nil ? "": " \(contact!.lastName!)")
+        let name = names == "" ? self.name! : names
         let callStore = CallStore.shared
-        callStore.createCall(name: name, number: number, phoneType: type, date: Date(), isMissed: false, isOutcome: true)
+        let callTime = minutes > 0 ? "\(minutes) minutes" : seconds > 0 ? "\(seconds) seconds" : "0"
+        let callType = callTime == "0" ? "Cancelled" : "Outgoing"
+        callStore.createCall(name: name, number: number, phoneType: type, date: Date(), callType: callType, callTime: callTime)
         self.dismiss(animated: false, completion: nil)
     }
     

@@ -30,6 +30,7 @@
 		7A87E79E2668D46300B422FE /* TagsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A87E79D2668D46300B422FE /* TagsViewController.swift */; };
 		7A87E7A12668D4AA00B422FE /* TagsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A87E7A02668D4AA00B422FE /* TagsDataSource.swift */; };
 		7A87E7A52668D50C00B422FE /* Contacts.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7A87E7A32668D50C00B422FE /* Contacts.xcdatamodeld */; };
+		7A87F182267CA25C00DBCF3E /* ProfileView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A87F181267CA25C00DBCF3E /* ProfileView.xib */; };
 		7A89DD2A2632EFCF00D23AEE /* KeypadViewContrloller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A89DD292632EFCF00D23AEE /* KeypadViewContrloller.swift */; };
 		7A8EA7BD2636B5E700721182 /* CallViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8EA7BC2636B5E700721182 /* CallViewController.swift */; };
 		7A9E60992672177900603745 /* FavouritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A9E60982672177900603745 /* FavouritesViewController.swift */; };
@@ -65,6 +66,7 @@
 		7A87E79D2668D46300B422FE /* TagsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsViewController.swift; sourceTree = "<group>"; };
 		7A87E7A02668D4AA00B422FE /* TagsDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsDataSource.swift; sourceTree = "<group>"; };
 		7A87E7A42668D50C00B422FE /* Contacts.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Contacts.xcdatamodel; sourceTree = "<group>"; };
+		7A87F181267CA25C00DBCF3E /* ProfileView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileView.xib; sourceTree = "<group>"; };
 		7A89DD292632EFCF00D23AEE /* KeypadViewContrloller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeypadViewContrloller.swift; sourceTree = "<group>"; };
 		7A8EA7BC2636B5E700721182 /* CallViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallViewController.swift; sourceTree = "<group>"; };
 		7A9E60982672177900603745 /* FavouritesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesViewController.swift; sourceTree = "<group>"; };
@@ -145,11 +147,12 @@
 				0E37EDF9262DC3C20099F19B /* ContactsViewController.swift */,
 				0E37EDF8262DC3C20099F19B /* ContactStore.swift */,
 				0E37EDFA262DC3C30099F19B /* ContactCell.swift */,
-				7A762FEE267B50850028B8CD /* CallInfoView.xib */,
 				7A7CD9AB26662DB300819C10 /* ContactInfoViewController.swift */,
 				7A7CD9AE26668ADE00819C10 /* EditContactViewController.swift */,
 				7A87E79D2668D46300B422FE /* TagsViewController.swift */,
 				7A87E7A02668D4AA00B422FE /* TagsDataSource.swift */,
+				7A762FEE267B50850028B8CD /* CallInfoView.xib */,
+				7A87F181267CA25C00DBCF3E /* ProfileView.xib */,
 			);
 			path = Contacts;
 			sourceTree = "<group>";
@@ -230,6 +233,7 @@
 			files = (
 				0E275A8126304142008A9149 /* .gitignore in Resources */,
 				0E256F352629A9530045B39F /* LaunchScreen.storyboard in Resources */,
+				7A87F182267CA25C00DBCF3E /* ProfileView.xib in Resources */,
 				7A762FEF267B50850028B8CD /* CallInfoView.xib in Resources */,
 				0E256F322629A9530045B39F /* Assets.xcassets in Resources */,
 				0E256F302629A9500045B39F /* Main.storyboard in Resources */,

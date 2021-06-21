@@ -12,14 +12,31 @@ class ContactCell: UITableViewCell {
 }
 
 // MARK: Info
+class ProfileView: UIView {
+    @IBOutlet var iDLabel: UILabel!
+    @IBOutlet var name: UILabel!
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        self.layer.cornerRadius = self.frame.width / 2
+        self.clipsToBounds = true
+    }
+    
+    class func fromNib() -> Self {
+        return Bundle(for: Self.self).loadNibNamed(String(describing: Self.self), owner: nil, options: nil)![0] as! Self
+    }
+}
+
 class CallInfoCell: UITableViewCell {
     @IBOutlet var day: UILabel!
     @IBOutlet var stackView: UIStackView!
     
-    func addCall(time: String, type: String) {
+    func addCall(time: String, type: String, duration: String) {
         let newView = CallInfoView.fromNib()
         newView.time.text = time
         newView.type.text = type
+        newView.duration.text = duration
+        newView.duration.isHidden = duration == "0"
         stackView.addArrangedSubview(newView)
     }
 }
@@ -27,6 +44,7 @@ class CallInfoCell: UITableViewCell {
 class CallInfoView: UIView {
     @IBOutlet var time: UILabel!
     @IBOutlet var type: UILabel!
+    @IBOutlet var duration: UILabel!
     
     class func fromNib() -> Self {
         return Bundle(for: Self.self).loadNibNamed(String(describing: Self.self), owner: nil, options: nil)![0] as! Self

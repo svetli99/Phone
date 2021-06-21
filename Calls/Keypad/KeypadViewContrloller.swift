@@ -84,11 +84,22 @@ class KeypadViewController: UIViewController {
             sender.backgroundColor = .systemGray5
         }
     }
+    @IBAction func call(_ sender: Any) {
+        if numberLabel.text != "" {
+            performSegue(withIdentifier: "CallViewController", sender: nil)
+        }
+    }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "CallViewController" {
             let callViewController = segue.destination as! CallViewController
+            callViewController.number = numberLabel.text
             callViewController.name = numberLabel.text
+            let number = numberLabel.text!.replacingOccurrences(of: " ", with: "")
+            if let contact = ContactStore.shared.getContact(for: number) {
+                callViewController.name = contact.firstName
+                callViewController.type = contact.noAttributesItems.phone?.first(where: { $0.value == number })?.type
+            }
         } else if segue.identifier != "Keypad" {
             preconditionFailure("Unexpected segue identifier.")
         }

@@ -67,11 +67,11 @@ class RecentViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) ->         UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CallCell", for: indexPath) as! CallCell
         let call = callStore.getCall(segmentedIndex: segmentedControl.selectedSegmentIndex, row: indexPath.row)
-        cell.nameLabel.text = call.name! + (call.inSeriesCount > 1 ? "(\(call.inSeriesCount))" : "")
-        cell.nameLabel.textColor = call.isMissed ? .red : .black
-        cell.phoneTypeLabel.text = call.type
-        cell.dateLabel.text = dateFormatting(call.date!.last!)
-        cell.icon.isHidden = !call.isOutcome
+        cell.nameLabel.text = call.first!.name! + (call.count > 1 ? "(\(call.count))" : "")
+        cell.nameLabel.textColor = call.first?.callType == "Missed" ? .red : .black
+        cell.phoneTypeLabel.text = call.first?.phoneType
+        cell.dateLabel.text = dateFormatting(call.first!.date!)
+        cell.icon.isHidden = call.first?.callType != "OutGoing"
         
         return cell
     }
@@ -137,15 +137,15 @@ class RecentViewController: UITableViewController {
             if let row = tableView.indexPathForSelectedRow?.row {
                 let callViewController = segue.destination as! CallViewController
                 let call = callStore.getCall(segmentedIndex: segmentedControl.selectedSegmentIndex, row: row)
-                callViewController.name = call.name
-                callViewController.type = call.type
-                callViewController.number = call.number
+                callViewController.name = call.first?.name
+                callViewController.type = call.first?.phoneType
+                callViewController.number = call.first?.number
             }
             case "Info":
                 if let indexPath = sender as? IndexPath {
                     let contactInfoViewController = segue.destination as! ContactInfoViewController
                     let call = callStore.getCall(segmentedIndex: segmentedControl.selectedSegmentIndex, row: indexPath.row)
-                    let conatct = contactStore.getContact(for: call.number! )
+                    let conatct = contactStore.getContact(for: call.first!.number! )
                     contactInfoViewController.contact = conatct
                     contactInfoViewController.call = call
                 }

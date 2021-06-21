@@ -5,12 +5,12 @@ import CoreData
 class CallStore {
     static var shared = CallStore()
     
-    var allCalls = [Call]() {
+    var allCalls = [[Call]]() {
         didSet {
-            missedCalls = allCalls.filter { $0.isMissed }
+            missedCalls = allCalls.filter { $0.first?.callType == "Missed" }
         }
     }
-    var missedCalls = [Call]()
+    var missedCalls = [[Call]]()
     
     let persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "Contacts")
@@ -42,7 +42,21 @@ class CallStore {
         viewContext.performAndWait {
             
             do {
-                allCalls = try viewContext.fetch(fetchRequest)
+                let calls = try viewContext.fetch(fetchRequest)
+                
+               
+                guard var prevCall = calls.first else {
+                    return
+                }
+                allCalls = [[prevCall]]
+                for call in calls[1...] {
+                    if prevCall.name == call.name, prevCall.number == call.number, prevCall.phoneType == call.phoneType, isInSameSection(prevCall.callType, call.callType) {
+                        allCalls[allCalls.count - 1].append(call)
+                    } else {
+                        allCalls.append([call])
+                        prevCall = call
+                    }
+                }
                 
             } catch {
                 print("Error loading calls:",error)
@@ -51,25 +65,27 @@ class CallStore {
         }
     }
     
-    func createCall(name: String,number: String, phoneType: String, date: Date, isMissed: Bool, isOutcome: Bool) {
-        if allCalls.first?.name == name, allCalls.first?.isMissed == isMissed, allCalls.first?.type == phoneType,allCalls.first?.number == number {
-            allCalls[0].inSeriesCount += 1
-            allCalls[0].date?.append(date)
-        } else {
-            let viewContext = persistentContainer.viewContext
-            var newCall: Call!
-            viewContext.performAndWait {
-                newCall = Call(context: viewContext)
-                newCall.name = name
-                newCall.number = number
-                newCall.date = [date]
-                newCall.type = phoneType
-                newCall.isMissed = isMissed
-                newCall.isOutcome = isOutcome
-                newCall.inSeriesCount = 1
-            }
-            allCalls.insert(newCall, at: 0)
+    func createCall(name: String, number: String, phoneType: String?, date: Date, callType: String?, callTime: String) {
+        let viewContext = persistentContainer.viewContext
+        var newCall: Call!
+        viewContext.performAndWait {
+            newCall = Call(context: viewContext)
+            newCall.name = name
+            newCall.number = number
+            newCall.date = date
+            newCall.phoneType = phoneType
+            newCall.callTime = callTime
+            newCall.callType = callType
         }
+        
+        let first = allCalls.first?.last
+        if first?.name == name, isInSameSection(first?.callType, callType), first?.phoneType == phoneType, first?.number == number {
+            allCalls[0].append(newCall)
+        } else {
+            allCalls.insert([newCall], at: 0)
+        }
+        
+        
         
         do {
             try persistentContainer.viewContext.save()
@@ -78,11 +94,15 @@ class CallStore {
         }
     }
     
+    private func isInSameSection(_ firts: String?,_ second: String?) -> Bool {
+        return (firts == "Missed" && second == "Missed") || (firts != "Missed" && second != "Missed")
+    }
+    
     func deleteCall(segmentedIndex: Int,index: Int) {
         var index = index
         if segmentedIndex == 1 {
             var c = index
-            for i in allCalls.indices where allCalls[i].isMissed {
+            for i in allCalls.indices where allCalls[i].first?.callType == "Missed" {
                 if c == 0 {
                     index = i
                     break
@@ -90,10 +110,13 @@ class CallStore {
                 c -= 1
             }
         }
-        let call = allCalls.remove(at: index)
         
         let context = persistentContainer.viewContext
-        context.delete(call)
+        
+        allCalls[index].forEach {
+            context.delete($0)
+        }
+        allCalls.remove(at: index)
         
         do {
             try persistentContainer.viewContext.save()
@@ -102,7 +125,7 @@ class CallStore {
         }
     }
     
-    func getCall(segmentedIndex: Int, row: Int) -> Call {
+    func getCall(segmentedIndex: Int, row: Int) -> [Call] {
         return segmentedIndex == 0 ? allCalls[row] : missedCalls[row]
     }
     

@@ -60,12 +60,11 @@ class ContactsViewController: UITableViewController, UISearchResultsUpdating {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) ->         UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ContactCell", for: indexPath) as! ContactCell
         let contact = contactStore.getContact(section: indexPath.section, row: indexPath.row)
-        cell.name.text = (contact.firstName ?? "") + " " + (contact.lastName ?? "")
+        cell.name.text = (contact.firstName ?? "") + (contact.lastName == nil ? "" : " \(contact.lastName!)")
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //presentationController?.presentationStyle
         if isFromFavourite {
             let alertStoryboard = UIStoryboard(name: "AlertStoryboard", bundle: nil)
             let alertController = alertStoryboard.instantiateViewController(withIdentifier: "MyAlert") as! AlertViewController
