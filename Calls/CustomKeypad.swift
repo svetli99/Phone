@@ -16,7 +16,7 @@ class CustomKeypad: UIControl, UICollectionViewDataSource {
         super.init(coder: coder)
         //configureViewHierarchy()
     }
-    
+    var size: CGFloat!
     var buttonBackgroundColor: UIColor = .systemGray5
     var titleColor: UIColor = .black
     var subtitleColor: UIColor = .black
@@ -64,10 +64,12 @@ class CustomKeypad: UIControl, UICollectionViewDataSource {
     
     func configureViewHierarchy() {
         let layout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: frame.width / 3 - 30, height: frame.width / 3 - 30)
-        layout.minimumInteritemSpacing = 12.5
+        size = min((frame.width - 50) / 3, (frame.height - 45) / 4)
+        layout.itemSize = CGSize(width: size, height: size)
+        layout.minimumInteritemSpacing = 25
         layout.minimumLineSpacing = 15
-        
+        heightAnchor.constraint(equalToConstant: 4 * size + 45).isActive = true
+        // 3 * x + 100 : 4 * x + 75
         let keypadCollection = UICollectionView(frame: frame, collectionViewLayout: layout)
         keypadCollection.translatesAutoresizingMaskIntoConstraints = false
         keypadCollection.backgroundColor = .clear
@@ -174,6 +176,8 @@ class CustomButton: UIView {
             button.trailingAnchor.constraint(equalTo: trailingAnchor),
             button.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
+        self.layoutIfNeeded()
+        
         
     }
 }

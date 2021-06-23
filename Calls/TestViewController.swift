@@ -1,6 +1,6 @@
 import UIKit
 
-class ContactInfoViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class TestViewController: UITableViewController {
     let store = ContactStore.shared
     let fixedLabels = [
         [[""]],
@@ -24,9 +24,8 @@ class ContactInfoViewController: UIViewController, UITableViewDelegate, UITableV
     
     @IBOutlet var nameLabel: UILabel!
     @IBOutlet var IDLabel: UILabel!
-    @IBOutlet var tableView: UITableView!
     
-    var contact: Contact! 
+    var contact: Contact!
     
     var name: String! {
         didSet {
@@ -75,22 +74,24 @@ class ContactInfoViewController: UIViewController, UITableViewDelegate, UITableV
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        contact = store.allContacts.first
+        //configureMenus()
+        //setTitleView()
         
-        configureMenus()
-        
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.contentInset = UIEdgeInsets(top: -30, left: 0, bottom: 0, right: 0)
-        setTitleView()
+        let profileView = ProfileView.fromNib()
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.titleView = profileView
+        navigationItem.titleView?.widthAnchor.constraint(equalToConstant: 350).isActive = true
+        //navigationItem.titleView?.heightAnchor.constraint(equalToConstant: 400).isActive = true
         //let profileView = ProfileView.fromNib()
         //navigationItem.titleView = profileView
         //navigationItem.titleView?.widthAnchor.constraint(equalToConstant: 100).isActive = true
         //navigationItem.titleView?.heightAnchor.constraint(equalToConstant: 150).isActive = true
-        let someView = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
-        someView.backgroundColor = .red
-        navigationItem.titleView = someView
-        navigationController?.navigationBar.barTintColor = UIColor(red: 244 / 256, green: 243 / 256, blue: 248 / 256, alpha: 1)
-        navigationController?.navigationBar.shadowImage = UIImage()
+//        let someView = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+//        someView.backgroundColor = .red
+//        navigationItem.titleView = someView
+        //navigationController?.navigationBar.barTintColor = UIColor(red: 244 / 256, green: 243 / 256, blue: 248 / 256, alpha: 1)
+        //navigationController?.navigationBar.shadowImage = UIImage()
         
     }
     
@@ -124,15 +125,15 @@ class ContactInfoViewController: UIViewController, UITableViewDelegate, UITableV
         tableView.reloadData()
     }
     
-    func numberOfSections(in tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         labelTitles.count
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         cellIdentifires[section].count
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifires[indexPath.section][indexPath.row], for: indexPath)
         switch cell {
         case let custom as CallInfoCell:
@@ -174,7 +175,7 @@ class ContactInfoViewController: UIViewController, UITableViewDelegate, UITableV
         return cell
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath)
         if let cell = cell as? InfoCell, indexPath.section == 0 + recentDif {
             let callViewController = storyboard?.instantiateViewController(identifier: "Dial") as! CallViewController

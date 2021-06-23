@@ -38,6 +38,7 @@
 		7AB8F9632668ED4D00CCCD47 /* Contact+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AB8F9612668ED4D00CCCD47 /* Contact+CoreDataClass.swift */; };
 		7AB8F9642668ED4D00CCCD47 /* Contact+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AB8F9622668ED4D00CCCD47 /* Contact+CoreDataProperties.swift */; };
 		7AB8F96C2669131300CCCD47 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AB8F96B2669131300CCCD47 /* Constants.swift */; };
+		7AFCB14D2681C833004EFB01 /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AFCB14C2681C833004EFB01 /* TestViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -74,6 +75,7 @@
 		7AB8F9612668ED4D00CCCD47 /* Contact+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Contact+CoreDataClass.swift"; sourceTree = "<group>"; };
 		7AB8F9622668ED4D00CCCD47 /* Contact+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Contact+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		7AB8F96B2669131300CCCD47 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		7AFCB14C2681C833004EFB01 /* TestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,6 +123,7 @@
 				7A8EA7BC2636B5E700721182 /* CallViewController.swift */,
 				0EEC1A232641846100F82E04 /* CustomKeypad.swift */,
 				0E256F2E2629A9500045B39F /* Main.storyboard */,
+				7AFCB14C2681C833004EFB01 /* TestViewController.swift */,
 				0E256F312629A9530045B39F /* Assets.xcassets */,
 				0E256F332629A9530045B39F /* LaunchScreen.storyboard */,
 				0E256F362629A9530045B39F /* Info.plist */,
@@ -258,6 +261,7 @@
 				7A83FEA626774EA70027722B /* AlertViewController.swift in Sources */,
 				0E37EDFD262DC3C30099F19B /* ContactsViewController.swift in Sources */,
 				7A9E60992672177900603745 /* FavouritesViewController.swift in Sources */,
+				7AFCB14D2681C833004EFB01 /* TestViewController.swift in Sources */,
 				7A7CD9AF26668ADE00819C10 /* EditContactViewController.swift in Sources */,
 				0EEC1A242641846100F82E04 /* CustomKeypad.swift in Sources */,
 				7A87E7A52668D50C00B422FE /* Contacts.xcdatamodeld in Sources */,

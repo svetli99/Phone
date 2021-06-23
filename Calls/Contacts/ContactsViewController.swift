@@ -10,7 +10,6 @@ import UIKit
 class ContactsViewController: UITableViewController, UISearchResultsUpdating {
     var contactStore = ContactStore.shared
     var searchController: UISearchController!
-    
     var isFromFavourite = false
     
     override func viewDidLoad() {
@@ -74,6 +73,15 @@ class ContactsViewController: UITableViewController, UISearchResultsUpdating {
         } else {
             performSegue(withIdentifier: "ContactInfo", sender: indexPath)
         }
+    }
+    
+    override func tableView(_ tableView: UITableView, sectionForSectionIndexTitle title: String, at index: Int) -> Int {
+        return contactStore.groupedContacts.firstIndex(where: { String($0.0) == title }) ?? 26
+    }
+    
+    override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
+        return contactStore.sectionTitles
+        //return contactStore.groupedContacts.map { String($0.0) }
     }
     
     func updateSearchResults(for searchController: UISearchController) {

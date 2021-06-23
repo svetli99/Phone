@@ -12,16 +12,6 @@ class CallStore {
     }
     var missedCalls = [[Call]]()
     
-    let persistentContainer: NSPersistentContainer = {
-        let container = NSPersistentContainer(name: "Contacts")
-        container.loadPersistentStores { (description, error) in
-            if let error = error {
-                print("Error setting up Core Data (\(error)).")
-            }
-        }
-        return container
-    }()
-    
     let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US")

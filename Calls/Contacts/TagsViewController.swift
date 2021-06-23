@@ -26,7 +26,7 @@ class TagsViewController: UITableViewController {
         selectedTagIndex = indexPath.row
         
         do {
-            try store.persistentContainer.viewContext.save()
+            try persistentContainer.viewContext.save()
         } catch {
             print("Core Data save failed: \(error).")
         }

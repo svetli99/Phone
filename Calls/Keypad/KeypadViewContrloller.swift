@@ -20,9 +20,10 @@ class KeypadViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
+        //callButton.frame = CGRect(x: 0, y: 0, width: customKeypad.size, height: customKeypad.size)
         callButton.layer.cornerRadius = callButton.bounds.width * 0.5
         callButton.clipsToBounds = true
+        customKeypad.style = .dial
     }
     
     override func viewDidLoad() {
@@ -30,7 +31,8 @@ class KeypadViewController: UIViewController {
         
         addNumberButton.isHidden = true
         customKeypad.addTarget(self, action: #selector(buttonPressed), for: .valueChanged)
-        customKeypad.style = .dial
+        
+        
     }
     
     @objc func buttonPressed(_ sender: CustomKeypad) {

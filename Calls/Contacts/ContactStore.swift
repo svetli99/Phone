@@ -4,7 +4,7 @@ import CoreData
 
 class ContactStore {
     static var shared = ContactStore()
-    
+    let sectionTitles = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","#"]
     var allContacts = [Contact]() {
         didSet {
             var grContacts = [(Character,[Contact])]()
@@ -14,6 +14,12 @@ class ContactStore {
                 
                 if let index = grContacts.firstIndex(where: { $0.0 == first }) {
                     grContacts[index].1.append(contact)
+                } else if !sectionTitles.contains(String(first)){
+                    if grContacts.last?.0 == "#" {
+                        grContacts[grContacts.count - 1].1.append(contact)
+                    } else {
+                        grContacts.append(("#",[contact]))
+                    }
                 } else {
                     grContacts.append((first,[contact]))
                 }
@@ -28,15 +34,7 @@ class ContactStore {
     
     var tags = ["mobile","home","work","school","other"]
     
-    let persistentContainer: NSPersistentContainer = {
-        let container = NSPersistentContainer(name: "Contacts")
-        container.loadPersistentStores { (description, error) in
-            if let error = error {
-                print("Error setting up Core Data (\(error)).")
-            }
-        }
-        return container
-    }()
+    
     
     private init() {
         loadContacts()

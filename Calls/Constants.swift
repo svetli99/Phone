@@ -1,4 +1,5 @@
 import UIKit
+import CoreData
 // MARK: Edit Contact
 let firstNameIndex = 0
 let lastNameIndex = 1
@@ -21,3 +22,13 @@ let notesSection = 12
 let numSection = 0
 // MARK: Alert
 let rowHeight = CGFloat(60)
+
+let persistentContainer: NSPersistentContainer = {
+    let container = NSPersistentContainer(name: "Contacts")
+    container.loadPersistentStores { (description, error) in
+        if let error = error {
+            print("Error setting up Core Data (\(error)).")
+        }
+    }
+    return container
+}()
